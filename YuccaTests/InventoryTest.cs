@@ -41,7 +41,7 @@ namespace YuccaTests
         }
 
         [Fact]
-        public void AddingNewItemsWithQuantity3WillShouwStockOf3()
+        public void AddingNewItemsWithQuantity3WillShowStockOf3()
         {
             inventory.AddItem(socks, 3);
             inventory.Items().First().InStock.Should().Be(3);
