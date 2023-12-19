@@ -13,14 +13,22 @@ public class InMemorySupplierList : SupplierList
         return Suppliers[0];
     }
 
-    public override void Save(Supplier supplier)
+    public override string Save(Supplier supplier)
     {
+        supplier.Id = Guid.NewGuid().ToString();
         Suppliers.Add(supplier);
+
+        return supplier.Id;
     }
 
     public override IEnumerable<Supplier> FilterByName(string text)
     {
         return Suppliers.FindAll(s => 
             s.Name.Contains(text, StringComparison.OrdinalIgnoreCase));
+    }
+
+    public override void Remove(string id)
+    {
+        Suppliers.RemoveAll(_ => _.Id == id);
     }
 }
