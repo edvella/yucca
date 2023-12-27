@@ -1,4 +1,6 @@
 using FluentAssertions;
+using System;
+using System.Linq;
 using Xunit;
 using Yucca.Inventory;
 using Yucca.Volatile;
@@ -22,23 +24,8 @@ public class SupplierTests
     [Fact]
     public void CanStoreSupplierDetails()
     {
-        var supplier = new Supplier
-        {
-            Name = "Supplier 1",
-            AddressLine1 = "Address Line 1",
-            AddressLine2 = "Address Line 2",
-            City = "City",
-            State = "State",
-            PostCode = "Post Code",
-            Country = "Country",
-            ContactPhone = "Contact Phone",
-            Email = "Email",
-            Website = "Website",
-            TaxNumber = "Tax Number"
-        };
+        AddSupplier();
 
-        suppliers.Save(supplier);
-        
         var result = suppliers.GetFirst();
         result.Name.Should().Be("Supplier 1");
         result.AddressLine1.Should().Be("Address Line 1");
@@ -54,6 +41,34 @@ public class SupplierTests
     }
 
     [Fact]
+    private void NewSupplierWillHaveAnId()
+    {
+        var result = AddSupplier();
+
+        Guid.Parse(result).Should().NotBeEmpty();
+    }
+
+    private string AddSupplier()
+    {
+        var supplier = new Supplier
+        {
+            Name = "Supplier 1",
+            AddressLine1 = "Address Line 1",
+            AddressLine2 = "Address Line 2",
+            City = "City",
+            State = "State",
+            PostCode = "Post Code",
+            Country = "Country",
+            ContactPhone = "Contact Phone",
+            Email = "Email",
+            Website = "Website",
+            TaxNumber = "Tax Number"
+        };
+
+        return suppliers.Save(supplier);
+    }
+
+    [Fact]
     public void CanFilterSupplierListByName()
     {
         suppliers.Save(new Supplier { Name = "Space Toys Co. Ltd." });
@@ -66,5 +81,49 @@ public class SupplierTests
         result.Should().HaveCount(2);
         result.Should().Contain(s => s.Name == "Moon Industries");
         result.Should().Contain(s => s.Name == "Moon Patrol Tools");
+    }
+
+    [Fact]
+    public void EmptySearchStringResultsInFullSupplierList()
+    {
+        suppliers.Save(new Supplier { Name = "Space Toys Co. Ltd." });
+        suppliers.Save(new Supplier { Name = "Omega Widgets" });
+        suppliers.Save(new Supplier { Name = "Moon Industries" });
+        suppliers.Save(new Supplier { Name = "Moon Patrol Tools" });
+
+        var result = suppliers.FilterByName("");
+
+        result.Should().HaveCount(4);
+        result.Should().Contain(s => s.Name == "Space Toys Co. Ltd.");
+        result.Should().Contain(s => s.Name == "Omega Widgets");
+        result.Should().Contain(s => s.Name == "Moon Industries");
+        result.Should().Contain(s => s.Name == "Moon Patrol Tools");
+    }
+
+    [Fact]
+    public void CanRemoveSupplier()
+    {
+        var id = AddSupplier();
+
+        suppliers.Remove(id);
+
+        var result = suppliers.FilterByName("");
+
+        result.Should().HaveCount(0);
+    }
+
+    [Fact]
+    public void CanRemoveRequiredSupplier()
+    {
+        var id2 = suppliers.Save(new Supplier { Name = "Omega Widgets" });
+        var id = AddSupplier();
+
+        suppliers.Remove(id);
+
+        var result = suppliers.FilterByName("");
+
+        result.Should().HaveCount(1);
+        result.First().Id.Should().Be(id2);
+        result.First().Name.Should().Be("Omega Widgets");
     }
 }
