@@ -1,17 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Yucca.Inventory;
 
 namespace Yucca.Volatile;
 
 public class InMemorySupplierList : SupplierList
 {
-    protected List<Supplier> Suppliers = new();
-
-    public override Supplier GetFirst()
-    {
-        return Suppliers[0];
-    }
+    protected static List<Supplier> Suppliers = [];
 
     public override string Save(Supplier supplier)
     {
@@ -19,6 +15,11 @@ public class InMemorySupplierList : SupplierList
         Suppliers.Add(supplier);
 
         return supplier.Id;
+    }
+
+    public override Supplier Get(string id)
+    {
+        return Suppliers.FirstOrDefault(_ => _.Id == id);
     }
 
     public override IEnumerable<Supplier> FilterByName(string text)

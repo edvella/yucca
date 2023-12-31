@@ -24,9 +24,9 @@ public class SupplierTests
     [Fact]
     public void CanStoreSupplierDetails()
     {
-        AddSupplier();
+        var id = AddSupplier();
 
-        var result = suppliers.GetFirst();
+        var result = suppliers.Get(id);
         result.Name.Should().Be("Supplier 1");
         result.AddressLine1.Should().Be("Address Line 1");
         result.AddressLine2.Should().Be("Address Line 2");
@@ -41,7 +41,7 @@ public class SupplierTests
     }
 
     [Fact]
-    private void NewSupplierWillHaveAnId()
+    public void NewSupplierWillHaveAnId()
     {
         var result = AddSupplier();
 
@@ -125,5 +125,27 @@ public class SupplierTests
         result.Should().HaveCount(1);
         result.First().Id.Should().Be(id2);
         result.First().Name.Should().Be("Omega Widgets");
+    }
+
+    [Fact]
+    public void CanGetAnySupplierByItsId()
+    {
+        suppliers.Save(new Supplier { Name = "Omega Widgets" });
+        var id = AddSupplier();
+
+        var result = suppliers.Get(id);
+
+        result.Id.Should().Be(id);
+        result.Name.Should().Be("Supplier 1");
+        result.AddressLine1.Should().Be("Address Line 1");
+        result.AddressLine2.Should().Be("Address Line 2");
+        result.City.Should().Be("City");
+        result.State.Should().Be("State");
+        result.PostCode.Should().Be("Post Code");
+        result.Country.Should().Be("Country");
+        result.ContactPhone.Should().Be("Contact Phone");
+        result.Email.Should().Be("Email");
+        result.Website.Should().Be("Website");
+        result.TaxNumber.Should().Be("Tax Number");
     }
 }
