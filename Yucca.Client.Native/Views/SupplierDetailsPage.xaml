@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewModels="clr-namespace:Yucca.Client.Native.ViewModels"
+             x:Class="Yucca.Client.Native.Views.SupplierDetailsPage"
+             Title="Edit Supplier">
+    <ContentPage.BindingContext>
+        <viewModels:SupplierDetailsViewModel />
+    </ContentPage.BindingContext>
+    <ScrollView>
+        <VerticalStackLayout Spacing="10" Margin="5">
+            <Entry x:Name="name"
+                    Placeholder="Supplier name"
+                    Text="{Binding Name}" />
+            <Entry x:Name="address1"
+                    Placeholder="Address line 1"
+                    Text="{Binding AddressLine1}" />
+            <Entry x:Name="address2"
+                    Placeholder="Address line 2"
+                    Text="{Binding AddressLine2}" />
+            <Entry x:Name="city"
+                    Placeholder="City"
+                    Text="{Binding City}" />
+            <Entry x:Name="state"
+                    Placeholder="State"
+                    Text="{Binding State}" />
+            <Entry x:Name="postcode"
+                    Placeholder="Postcode"
+                    Text="{Binding PostCode}" />
+            <Entry x:Name="country"
+                    Placeholder="Country"
+                    Text="{Binding Country}" />
+            <Entry x:Name="phone"
+                    Placeholder="Contact phone number"
+                    Text="{Binding ContactPhone}" />
+            <Entry x:Name="email"
+                    Placeholder="Email"
+                    Text="{Binding Email}" />
+            <Entry x:Name="website"
+                    Placeholder="Website address"
+                    Text="{Binding Website}" />
+            <Entry x:Name="taxnum"
+                    Placeholder="Tax number"
+                    Text="{Binding TaxNumber}" />
+
+            <Grid ColumnDefinitions="*,*" ColumnSpacing="4">
+                <Button Text="Save"
+                        Command="{Binding SaveCommand}" />
+
+                <Button Grid.Column="1"
+                        Text="Delete"
+                        Command="{Binding DeleteCommand}" />
+            </Grid>
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

@@ -8,7 +8,12 @@
 
     <TabBar>
         <ShellContent
-            Title="About"
+            Title="Suppliers"
+            ContentTemplate="{DataTemplate views:SupplierOverviewPage}"
+            Icon="{OnPlatform 'icon_suppliers.png', iOS='icon_suppliers_ios.png', MacCatalyst='icon_suppliers_ios.png'}" />
+
+        <ShellContent
+            Title="About Yucca"
             ContentTemplate="{DataTemplate views:AboutPage}"
             Icon="{OnPlatform 'icon_about.png', iOS='icon_about_ios.png', MacCatalyst='icon_about_ios.png'}" />
     </TabBar>

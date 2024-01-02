@@ -5,6 +5,8 @@
         public AppShell()
         {
             InitializeComponent();
+
+            Routing.RegisterRoute(nameof(Views.SupplierDetailsPage), typeof(Views.SupplierDetailsPage));
         }
     }
 }
