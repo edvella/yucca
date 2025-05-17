@@ -13,7 +13,6 @@ namespace Yucca.WebAPI.Controllers
         [HttpGet]
         public ActionResult<IEnumerable<Supplier>> GetSuppliers()
         {
-            // Return all suppliers in the in-memory list
             return Ok(supplierList.FilterByName(string.Empty));
         }
 

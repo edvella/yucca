@@ -24,7 +24,15 @@ The Yucca program can be run directly from the console to perform various operat
 3. **Command-Line Arguments**:
    - To display information about the application, use the `--about` argument:
      ```bash
-     dotnet run --about
+     dotnet run -- --about
+     ```
+   - To list all suppliers, use:
+     ```bash
+     dotnet run -- supplier list
+     ```
+   - To add a supplier, use:
+     ```bash
+     dotnet run -- supplier add "Supplier Name"
      ```
    - If no valid arguments are provided, the program will display a message indicating the available options.
 
