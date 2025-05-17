@@ -41,7 +41,7 @@ public class SupplierTests
     }
 
     [Fact]
-    private void NewSupplierWillHaveAnId()
+    public void NewSupplierWillHaveAnId()
     {
         var result = AddSupplier();
 

@@ -6,7 +6,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Yucca.Inventory\Yucca.Inventory.csproj" />
-    <ProjectReference Include="..\Yucca\Yucca.csproj" />
   </ItemGroup>
 
 </Project>

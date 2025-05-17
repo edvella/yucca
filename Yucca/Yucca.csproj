@@ -15,4 +15,9 @@
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Yucca.Inventory\Yucca.Inventory.csproj" />
+    <ProjectReference Include="..\Yucca.Volatile\Yucca.Volatile.csproj" />
+  </ItemGroup>
+
 </Project>
