@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Yucca.Volatile", "Yucca.Vol
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Yucca.WebAPI", "Yucca.WebAPI\Yucca.WebAPI.csproj", "{49888DAA-3D7D-4514-99FE-5175A657456B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Yucca.Web", "Yucca.Web\Yucca.Web.csproj", "{683F17F4-77EC-473C-871B-EAC2CE0A7DEB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -83,6 +85,18 @@ Global
 		{49888DAA-3D7D-4514-99FE-5175A657456B}.Release|x64.Build.0 = Release|Any CPU
 		{49888DAA-3D7D-4514-99FE-5175A657456B}.Release|x86.ActiveCfg = Release|Any CPU
 		{49888DAA-3D7D-4514-99FE-5175A657456B}.Release|x86.Build.0 = Release|Any CPU
+		{683F17F4-77EC-473C-871B-EAC2CE0A7DEB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{683F17F4-77EC-473C-871B-EAC2CE0A7DEB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{683F17F4-77EC-473C-871B-EAC2CE0A7DEB}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{683F17F4-77EC-473C-871B-EAC2CE0A7DEB}.Debug|x64.Build.0 = Debug|Any CPU
+		{683F17F4-77EC-473C-871B-EAC2CE0A7DEB}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{683F17F4-77EC-473C-871B-EAC2CE0A7DEB}.Debug|x86.Build.0 = Debug|Any CPU
+		{683F17F4-77EC-473C-871B-EAC2CE0A7DEB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{683F17F4-77EC-473C-871B-EAC2CE0A7DEB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{683F17F4-77EC-473C-871B-EAC2CE0A7DEB}.Release|x64.ActiveCfg = Release|Any CPU
+		{683F17F4-77EC-473C-871B-EAC2CE0A7DEB}.Release|x64.Build.0 = Release|Any CPU
+		{683F17F4-77EC-473C-871B-EAC2CE0A7DEB}.Release|x86.ActiveCfg = Release|Any CPU
+		{683F17F4-77EC-473C-871B-EAC2CE0A7DEB}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
