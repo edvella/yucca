@@ -3,6 +3,35 @@
 ## Overview
 Yucca is a comprehensive tool for managing inventory, sales, clients, suppliers, and financial operations for small to medium-sized businesses.
 
+## Web Application Architecture:
+
+![Solution Architecture](doc/arch.png)
+
+## Running Yucca as an Aspire Solution via Yucca.AppHost
+
+To run Yucca as an Aspire solution, follow these steps:
+
+1. **Navigate to the Project Directory**:
+   Open a terminal and navigate to the `Yucca` project directory:
+   ```bash
+   cd d:\source\yucca
+   ```
+
+2. **Run the Program via the IDE**:
+   Start a debug session by setting Yucca.AppHost as the startup project and start the application (F5 in Visual Studio).
+
+   A new browser tab will be launched automatically to show the Aspire dashboard.
+
+3. **Run the Aspire Application via CLI**:
+   Use the following command to start the application:
+   ```bash
+   dotnet run --project Yucca.AppHost/Yucca.AppHost.csproj
+   ```
+
+   Open https://localhost:17030 inside your browser to access the Aspire dashboard.
+
+---
+
 ## Running the Yucca Program from the Console
 
 The Yucca program can be run directly from the console to perform various operations.

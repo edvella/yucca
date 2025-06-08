@@ -1,0 +1,80 @@
+@page "/suppliers"
+@using Yucca.Inventory
+@using Yucca.Web.Services
+
+@inject SupplierService SupplierService
+@attribute [StreamRendering(true)]
+
+<PageTitle>Suppliers</PageTitle>
+
+<h1>Suppliers</h1>
+
+@if (_suppliers is null)
+{
+    <p><em>Loading...</em></p>
+}
+else if (_suppliers.Count is 0)
+{
+    <p><em>No suppliers yet.</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>City</th>
+                <th>Phone</th>
+                <th>Website</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var supplier in _suppliers)
+            {
+                <tr>
+                    <td>@supplier.Name</td>
+                    <td>@supplier.City</td>
+                    <td>@supplier.ContactPhone</td>
+                    <td>@supplier.Website</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+<h4>Add Supplier</h4>
+<form method="post" @onsubmit="AddSupplier" @formname="supplier-form">
+    <AntiforgeryToken />
+    <div>
+        <label>
+            Identifier: 
+            <InputText @bind-Value="_supplier!.Name" />
+        </label>
+    </div>
+    <div>
+        <button type="submit">Add</button>
+    </div>
+</form>
+
+@code {
+
+    private List<Supplier>? _suppliers;
+
+    [SupplyParameterFromForm]
+    private Supplier? _supplier { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        _supplier ??= new();
+        _suppliers = await SupplierService.GetSuppliers();
+    }
+
+    private async Task AddSupplier()
+    {
+        if (await SupplierService.AddSupplier(_supplier!))
+        {
+            _suppliers!.Add(_supplier!);
+            _supplier = new();
+        }
+    }
+}

@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.30406.217
+# Visual Studio Version 17
+VisualStudioVersion = 17.14.36202.13 d17.14
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Yucca", "Yucca\Yucca.csproj", "{BB300EE4-BB57-468D-926C-24F948F5594B}"
 EndProject
@@ -14,6 +14,10 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Yucca.WebAPI", "Yucca.WebAPI\Yucca.WebAPI.csproj", "{49888DAA-3D7D-4514-99FE-5175A657456B}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Yucca.Web", "Yucca.Web\Yucca.Web.csproj", "{683F17F4-77EC-473C-871B-EAC2CE0A7DEB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Yucca.AppHost", "Yucca.AppHost\Yucca.AppHost.csproj", "{CCD54E3B-9058-45DF-9F44-9B82D670193C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Yucca.ServiceDefaults", "Yucca.ServiceDefaults\Yucca.ServiceDefaults.csproj", "{7739878A-248B-4F71-864F-91C65BAC2508}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -97,6 +101,30 @@ Global
 		{683F17F4-77EC-473C-871B-EAC2CE0A7DEB}.Release|x64.Build.0 = Release|Any CPU
 		{683F17F4-77EC-473C-871B-EAC2CE0A7DEB}.Release|x86.ActiveCfg = Release|Any CPU
 		{683F17F4-77EC-473C-871B-EAC2CE0A7DEB}.Release|x86.Build.0 = Release|Any CPU
+		{CCD54E3B-9058-45DF-9F44-9B82D670193C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CCD54E3B-9058-45DF-9F44-9B82D670193C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CCD54E3B-9058-45DF-9F44-9B82D670193C}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{CCD54E3B-9058-45DF-9F44-9B82D670193C}.Debug|x64.Build.0 = Debug|Any CPU
+		{CCD54E3B-9058-45DF-9F44-9B82D670193C}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{CCD54E3B-9058-45DF-9F44-9B82D670193C}.Debug|x86.Build.0 = Debug|Any CPU
+		{CCD54E3B-9058-45DF-9F44-9B82D670193C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CCD54E3B-9058-45DF-9F44-9B82D670193C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CCD54E3B-9058-45DF-9F44-9B82D670193C}.Release|x64.ActiveCfg = Release|Any CPU
+		{CCD54E3B-9058-45DF-9F44-9B82D670193C}.Release|x64.Build.0 = Release|Any CPU
+		{CCD54E3B-9058-45DF-9F44-9B82D670193C}.Release|x86.ActiveCfg = Release|Any CPU
+		{CCD54E3B-9058-45DF-9F44-9B82D670193C}.Release|x86.Build.0 = Release|Any CPU
+		{7739878A-248B-4F71-864F-91C65BAC2508}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7739878A-248B-4F71-864F-91C65BAC2508}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7739878A-248B-4F71-864F-91C65BAC2508}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{7739878A-248B-4F71-864F-91C65BAC2508}.Debug|x64.Build.0 = Debug|Any CPU
+		{7739878A-248B-4F71-864F-91C65BAC2508}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{7739878A-248B-4F71-864F-91C65BAC2508}.Debug|x86.Build.0 = Debug|Any CPU
+		{7739878A-248B-4F71-864F-91C65BAC2508}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7739878A-248B-4F71-864F-91C65BAC2508}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7739878A-248B-4F71-864F-91C65BAC2508}.Release|x64.ActiveCfg = Release|Any CPU
+		{7739878A-248B-4F71-864F-91C65BAC2508}.Release|x64.Build.0 = Release|Any CPU
+		{7739878A-248B-4F71-864F-91C65BAC2508}.Release|x86.ActiveCfg = Release|Any CPU
+		{7739878A-248B-4F71-864F-91C65BAC2508}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
