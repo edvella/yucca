@@ -45,14 +45,52 @@ else
 <h4>Add Supplier</h4>
 <form method="post" @onsubmit="AddSupplier" @formname="supplier-form">
     <AntiforgeryToken />
-    <div>
-        <label>
-            Identifier: 
-            <InputText @bind-Value="_supplier!.Name" />
-        </label>
+    <div class="form-group">
+        <label for="supplier-name">Name:</label>
+        <InputText id="supplier-name" class="form-control" @bind-Value="_supplier!.Name" type="text" />
+        </div>
+        <div class="form-group">
+        <label for="supplier-address-line1">Address Line 1:</label>
+        <InputText id="supplier-address-line1" class="form-control" @bind-Value="_supplier!.AddressLine1" type="text" />
+        </div>
+        <div class="form-group">
+        <label for="supplier-address-line2">Address Line 2:</label>
+        <InputText id="supplier-address-line2" class="form-control" @bind-Value="_supplier!.AddressLine2" type="text" />
+        </div>
+        <div class="form-group">
+        <label for="supplier-city">City:</label>
+        <InputText id="supplier-city" class="form-control" @bind-Value="_supplier!.City" type="text" />
+        </div>
+        <div class="form-group">
+        <label for="supplier-state">State:</label>
+        <InputText id="supplier-state" class="form-control" @bind-Value="_supplier!.State" type="text" />
+        </div>
+        <div class="form-group">
+        <label for="supplier-postcode">Post Code:</label>
+        <InputText id="supplier-postcode" class="form-control" @bind-Value="_supplier!.PostCode" type="text" />
+        </div>
+        <div class="form-group">
+        <label for="supplier-country">Country:</label>
+        <InputText id="supplier-country" class="form-control" @bind-Value="_supplier!.Country" type="text" />
+        </div>
+        <div class="form-group">
+        <label for="supplier-contact-phone">Contact Phone:</label>
+        <InputText id="supplier-contact-phone" class="form-control" @bind-Value="_supplier!.ContactPhone" type="tel" />
+        </div>
+        <div class="form-group">
+        <label for="supplier-email">Email:</label>
+        <InputText id="supplier-email" class="form-control" @bind-Value="_supplier!.Email" type="email" />
+        </div>
+        <div class="form-group">
+        <label for="supplier-website">Website:</label>
+        <InputText id="supplier-website" class="form-control" @bind-Value="_supplier!.Website" type="url" />
+        </div>
+        <div class="form-group">
+        <label for="supplier-tax-number">Tax Number:</label>
+        <InputText id="supplier-tax-number" class="form-control" @bind-Value="_supplier!.TaxNumber" type="text" />
     </div>
     <div>
-        <button type="submit">Add</button>
+        <button type="submit" class="btn btn-primary">Add</button>
     </div>
 </form>
 

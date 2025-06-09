@@ -3,7 +3,7 @@
 ## Overview
 Yucca is a comprehensive tool for managing inventory, sales, clients, suppliers, and financial operations for small to medium-sized businesses.
 
-## Web Application Architecture:
+## Web Application Architecture
 
 ![Solution Architecture](doc/arch.png)
 
