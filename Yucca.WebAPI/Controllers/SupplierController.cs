@@ -16,6 +16,24 @@ namespace Yucca.WebAPI.Controllers
             return Ok(supplierList.FilterByName(string.Empty));
         }
 
+        [HttpGet("{id}")]
+        public ActionResult<Supplier> GetSupplier(string id)
+        {
+            if (string.IsNullOrEmpty(id))
+            {
+                return BadRequest("Supplier ID is required.");
+            }
+            
+            var supplier = supplierList.Get(id);
+            
+            if (supplier == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(supplier);
+        }
+
         [HttpPost]
         public ActionResult<Supplier> AddSupplier([FromBody] Supplier supplier)
         {

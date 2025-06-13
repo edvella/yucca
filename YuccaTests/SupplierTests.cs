@@ -69,6 +69,27 @@ public class SupplierTests
     }
 
     [Fact]
+    public void CanGetSupplierById()
+    {
+        var id = AddSupplier();
+
+        var result = suppliers.Get(id);
+
+        result.Should().NotBeNull();
+        result.Name.Should().Be("Supplier 1");
+        result.AddressLine1.Should().Be("Address Line 1");
+        result.AddressLine2.Should().Be("Address Line 2");
+        result.City.Should().Be("City");
+        result.State.Should().Be("State");
+        result.PostCode.Should().Be("Post Code");
+        result.Country.Should().Be("Country");
+        result.ContactPhone.Should().Be("Contact Phone");
+        result.Email.Should().Be("Email");
+        result.Website.Should().Be("Website");
+        result.TaxNumber.Should().Be("Tax Number");
+    }
+
+    [Fact]
     public void CanFilterSupplierListByName()
     {
         suppliers.Save(new Supplier { Name = "Space Toys Co. Ltd." });

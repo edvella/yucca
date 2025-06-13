@@ -18,6 +18,19 @@ internal sealed class SupplierService(HttpClient httpClient, ILogger<SupplierSer
         return suppliers ?? [];
     }
 
+    public async Task<Supplier?> GetSupplierById(string id)
+    {
+        var response = await httpClient.GetAsync($"/api/supplier/{id}");
+
+        if (response.IsSuccessStatusCode)
+        {
+            return await response.Content.ReadFromJsonAsync<Supplier>();
+        }
+
+        logger.LogWarning("Failed to fetch supplier with ID {Id}. StatusCode: {StatusCode}", id, response.StatusCode);
+        return null;
+    }
+
     public async Task<bool> AddSupplier(Supplier supplier)
     {
         var response = await httpClient.PostAsJsonAsync("/api/supplier", supplier);

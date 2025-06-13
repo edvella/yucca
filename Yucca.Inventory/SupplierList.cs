@@ -13,4 +13,6 @@ public abstract class SupplierList
     public abstract IEnumerable<Supplier> FilterByName(string text);
 
     public abstract void Remove(string id);
+    
+    public abstract Supplier Get(string id);
 }

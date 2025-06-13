@@ -31,4 +31,9 @@ public class InMemorySupplierList : SupplierList
     {
         Suppliers.RemoveAll(_ => _.Id == id);
     }
+
+    public override Supplier Get(string id)
+    {
+        return Suppliers.Find(s => s.Id == id);
+    }
 }
