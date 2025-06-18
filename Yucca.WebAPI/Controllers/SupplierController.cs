@@ -9,11 +9,11 @@ namespace Yucca.WebAPI.Controllers
     public class SupplierController : ControllerBase
     {
         private static readonly InMemorySupplierList supplierList = new();
-
+        
         [HttpGet]
-        public ActionResult<IEnumerable<Supplier>> GetSuppliers()
+        public ActionResult<IEnumerable<Supplier>> GetSuppliers([FromQuery] string name = "")
         {
-            return Ok(supplierList.FilterByName(string.Empty));
+            return Ok(supplierList.FilterByName(name));
         }
 
         [HttpGet("{id}")]

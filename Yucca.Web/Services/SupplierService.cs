@@ -4,11 +4,15 @@ namespace Yucca.Web.Services;
 
 internal sealed class SupplierService(HttpClient httpClient, ILogger<SupplierService> logger)
 {
-    public async Task<List<Supplier>> GetSuppliers()
+    public async Task<List<Supplier>> GetSuppliers(string nameFilter = "")
     {
         List<Supplier>? suppliers = null;
 
-        var response = await httpClient.GetAsync("/api/supplier");
+        var requestUri = string.IsNullOrWhiteSpace(nameFilter)
+            ? "/api/supplier"
+            : $"/api/supplier?name={Uri.EscapeDataString(nameFilter)}";
+
+        var response = await httpClient.GetAsync(requestUri);
 
         if (response.IsSuccessStatusCode)
         {

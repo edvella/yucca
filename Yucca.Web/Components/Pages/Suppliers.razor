@@ -1,6 +1,10 @@
 @page "/suppliers"
 @using Yucca.Inventory
 @using Yucca.Web.Services
+@using System.Timers
+@using Microsoft.AspNetCore.Components.Web
+@using Yucca.Web.Components.Shared.Icons
+@implements IDisposable
 
 @inject SupplierService SupplierService
 @inject IJSRuntime JSRuntime
@@ -10,116 +14,199 @@
 
 <PageTitle>Suppliers</PageTitle>
 
-<h1>Suppliers</h1>
+<h1 class="text-3xl font-bold mb-6 text-gray-800">Suppliers</h1>
+
+<div class="mb-6">
+    <div class="relative">
+        <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
+            <MagnifyingGlassIcon CssClass="w-5 h-5 text-gray-500" Size="20" />
+        </div>
+        <input type="text" class="block w-full p-2 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" 
+               placeholder="Search suppliers..." 
+               @bind="_searchText" 
+               @bind:event="oninput" 
+               @onkeydown="HandleKeyDown"
+               @bind:after="StartSearchTimer" />
+    </div>
+</div>
 
 @if (_suppliers is null)
 {
-    <p><em>Loading...</em></p>
+    <div class="flex items-center justify-center p-5 bg-gray-100 rounded-lg">
+        <div class="animate-pulse flex space-x-4">
+            <div class="h-10 w-10 rounded-full bg-gray-300"></div>
+            <div class="flex-1 space-y-2 py-1">
+                <div class="h-4 bg-gray-300 rounded w-3/4"></div>
+                <div class="h-4 bg-gray-300 rounded w-1/2"></div>
+            </div>
+        </div>
+    </div>
 }
 else if (_suppliers.Count is 0)
 {
-    <p><em>No suppliers yet.</em></p>
+    <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 mb-5">
+        <div class="flex">
+            <div class="flex-shrink-0">
+                <svg class="h-5 w-5 text-yellow-400" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                    <path fill-rule="evenodd" d="M8.485 2.495c.673-1.167 2.357-1.167 3.03 0l6.28 10.875c.673 1.167-.17 2.625-1.516 2.625H3.72c-1.347 0-2.189-1.458-1.515-2.625L8.485 2.495zM10 5a.75.75 0 01.75.75v3.5a.75.75 0 01-1.5 0v-3.5A.75.75 0 0110 5zm0 9a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd" />
+                </svg>
+            </div>
+            <div class="ml-3">
+                <p class="text-sm text-yellow-700">No suppliers yet.</p>
+            </div>
+        </div>
+    </div>
 }
 else
 {
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Name</th>
-                <th>City</th>
-                <th>Phone</th>
-                <th>Website</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var supplier in _suppliers)
-            {
-                <tr @onclick="() => SelectSupplier(supplier.Id)" style="cursor: pointer;" class="@(supplier.Id == _supplier?.Id ? "table-active" : "")">
-                    <td>@supplier.Name</td>
-                    <td>@supplier.City</td>
-                    <td>@supplier.ContactPhone</td>
-                    <td>@supplier.Website</td>
+    <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
+        <table class="w-full text-sm text-left text-gray-500">
+            <thead class="text-xs text-white uppercase bg-blue-600">
+                <tr>
+                    <th scope="col" class="px-6 py-3">Name</th>
+                    <th scope="col" class="px-6 py-3">City</th>
+                    <th scope="col" class="px-6 py-3">Phone</th>
+                    <th scope="col" class="px-6 py-3">Website</th>
                 </tr>
-            }
-        </tbody>
-    </table>
+            </thead>            <tbody>
+                @foreach (var supplier in _suppliers ?? new List<Supplier>())
+                {
+                    <tr @onclick="() => SelectSupplier(supplier.Id)" 
+                        class="@(supplier.Id == _supplier?.Id ? "bg-blue-50 border-l-4 border-blue-500" : "bg-white border-b hover:bg-gray-50") cursor-pointer transition-all duration-200">
+                        <td class="px-6 py-4 font-medium text-gray-900">@supplier.Name</td>
+                        <td class="px-6 py-4">@supplier.City</td>
+                        <td class="px-6 py-4">@supplier.ContactPhone</td>
+                        <td class="px-6 py-4">@supplier.Website</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
 }
 
-<h4>@(_isNewSupplier ? "Add Supplier" : "Edit Supplier")</h4>
-<form method="post" @onsubmit="SaveSupplier" @formname="supplier-form">
+<h4 class="text-xl font-semibold mt-8 mb-4 text-gray-800">@(_isNewSupplier ? "Add Supplier" : "Edit Supplier")</h4>
+<form method="post" @onsubmit="SaveSupplier" @formname="supplier-form" class="bg-white shadow-md rounded-lg p-6 mb-6">
     <AntiforgeryToken />
-    <div class="form-group">
-        <label for="supplier-id">ID:</label>
-        <InputText id="supplier-id" class="form-control" @bind-Value="_supplier!.Id" type="text" readonly />
+    <div class="mb-4">
+        <label for="supplier-id" class="block text-gray-700 text-sm font-medium mb-1">ID:</label>
+        <InputText id="supplier-id" class="bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5" @bind-Value="_supplier!.Id" type="text" readonly />
     </div>
-    <div class="form-group">
-        <label for="supplier-name">Name:</label>
-        <InputText id="supplier-name" class="form-control" @bind-Value="_supplier!.Name" type="text" />
+    <div class="mb-4">
+        <label for="supplier-name" class="block text-gray-700 text-sm font-medium mb-1">Name:</label>
+        <InputText id="supplier-name" class="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" @bind-Value="_supplier!.Name" type="text" />
     </div>
-    <div class="form-group">
-        <label for="supplier-address-line1">Address Line 1:</label>
-        <InputText id="supplier-address-line1" class="form-control" @bind-Value="_supplier!.AddressLine1" type="text" />
+    <div class="mb-4">
+        <label for="supplier-address-line1" class="block text-gray-700 text-sm font-medium mb-1">Address Line 1:</label>
+        <InputText id="supplier-address-line1" class="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" @bind-Value="_supplier!.AddressLine1" type="text" />
+    </div>    <div class="mb-4">
+        <label for="supplier-address-line2" class="block text-gray-700 text-sm font-medium mb-1">Address Line 2:</label>
+        <InputText id="supplier-address-line2" class="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" @bind-Value="_supplier!.AddressLine2" type="text" />
     </div>
-    <div class="form-group">
-        <label for="supplier-address-line2">Address Line 2:</label>
-        <InputText id="supplier-address-line2" class="form-control" @bind-Value="_supplier!.AddressLine2" type="text" />
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div class="mb-4">
+            <label for="supplier-city" class="block text-gray-700 text-sm font-medium mb-1">City:</label>
+            <InputText id="supplier-city" class="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" @bind-Value="_supplier!.City" type="text" />
+        </div>
+        <div class="mb-4">
+            <label for="supplier-state" class="block text-gray-700 text-sm font-medium mb-1">State:</label>
+            <InputText id="supplier-state" class="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" @bind-Value="_supplier!.State" type="text" />
+        </div>
     </div>
-    <div class="form-group">
-        <label for="supplier-city">City:</label>
-        <InputText id="supplier-city" class="form-control" @bind-Value="_supplier!.City" type="text" />
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div class="mb-4">
+            <label for="supplier-postcode" class="block text-gray-700 text-sm font-medium mb-1">Post Code:</label>
+            <InputText id="supplier-postcode" class="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" @bind-Value="_supplier!.PostCode" type="text" />
+        </div>
+        <div class="mb-4">
+            <label for="supplier-country" class="block text-gray-700 text-sm font-medium mb-1">Country:</label>
+            <InputText id="supplier-country" class="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" @bind-Value="_supplier!.Country" type="text" />
+        </div>
     </div>
-    <div class="form-group">
-        <label for="supplier-state">State:</label>
-        <InputText id="supplier-state" class="form-control" @bind-Value="_supplier!.State" type="text" />
+    <div class="mb-4">
+        <label for="supplier-contact-phone" class="block text-gray-700 text-sm font-medium mb-1">Contact Phone:</label>
+        <InputText id="supplier-contact-phone" class="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" @bind-Value="_supplier!.ContactPhone" type="tel" />
     </div>
-    <div class="form-group">
-        <label for="supplier-postcode">Post Code:</label>
-        <InputText id="supplier-postcode" class="form-control" @bind-Value="_supplier!.PostCode" type="text" />
+    <div class="mb-4">
+        <label for="supplier-email" class="block text-gray-700 text-sm font-medium mb-1">Email:</label>
+        <InputText id="supplier-email" class="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" @bind-Value="_supplier!.Email" type="email" />
     </div>
-    <div class="form-group">
-        <label for="supplier-country">Country:</label>
-        <InputText id="supplier-country" class="form-control" @bind-Value="_supplier!.Country" type="text" />
+    <div class="mb-4">
+        <label for="supplier-website" class="block text-gray-700 text-sm font-medium mb-1">Website:</label>
+        <InputText id="supplier-website" class="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" @bind-Value="_supplier!.Website" type="url" />
     </div>
-    <div class="form-group">
-        <label for="supplier-contact-phone">Contact Phone:</label>
-        <InputText id="supplier-contact-phone" class="form-control" @bind-Value="_supplier!.ContactPhone" type="tel" />
-    </div>
-    <div class="form-group">
-        <label for="supplier-email">Email:</label>
-        <InputText id="supplier-email" class="form-control" @bind-Value="_supplier!.Email" type="email" />
-    </div>
-    <div class="form-group">
-        <label for="supplier-website">Website:</label>
-        <InputText id="supplier-website" class="form-control" @bind-Value="_supplier!.Website" type="url" />
-    </div>
-    <div class="form-group">
-        <label for="supplier-tax-number">Tax Number:</label>
-        <InputText id="supplier-tax-number" class="form-control" @bind-Value="_supplier!.TaxNumber" type="text" />
-    </div>
-    <div>
-        <button type="submit" class="btn btn-primary">@(_isNewSupplier ? "Add" : "Update")</button>
+    <div class="mb-6">
+        <label for="supplier-tax-number" class="block text-gray-700 text-sm font-medium mb-1">Tax Number:</label>
+        <InputText id="supplier-tax-number" class="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" @bind-Value="_supplier!.TaxNumber" type="text" />
+    </div>    <div>
+        <button type="submit" class="inline-flex items-center px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg text-sm transition-colors duration-200">
+            @if (_isNewSupplier)
+            {
+                <PlusIcon CssClass="w-4 h-4 mr-2" Size="16" />
+                <span>Add Supplier</span>
+            }
+            else
+            {
+                <span>Update Supplier</span>
+            }
+        </button>
     </div>
 </form>
 
 @code {
-
     private List<Supplier>? _suppliers;
+    private string _searchText = string.Empty;
+    private Timer? _debounceTimer;
+    private const int DebounceDelayMilliseconds = 500;
+
+    public void Dispose()
+    {
+        _debounceTimer?.Dispose();
+    }
+    
 
     [SupplyParameterFromForm]
     private Supplier? _supplier { get; set; }
 
-    private bool _isNewSupplier = true;
-
-    protected override async Task OnInitializedAsync()
+    private bool _isNewSupplier = true;    protected override async Task OnInitializedAsync()
     {
         _supplier ??= new();
+        _debounceTimer = new Timer(DebounceDelayMilliseconds);
+        _debounceTimer.AutoReset = false;
+        _debounceTimer.Elapsed += async (sender, args) => await InvokeAsync(FilterSuppliers);
         await RefreshSupplierList();
     }
-
+    
     private async Task RefreshSupplierList()
     {
-        _suppliers = await SupplierService.GetSuppliers();
-        StateHasChanged();
+        await FilterSuppliers();
+    }
+
+    private async Task FilterSuppliers()
+    {
+        try
+        {
+            _suppliers = await SupplierService.GetSuppliers(_searchText);
+            await InvokeAsync(StateHasChanged);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error in FilterSuppliers: {ex.Message}");
+        }
+    }
+
+    private void StartSearchTimer()
+    {
+        _debounceTimer?.Stop();
+        _debounceTimer?.Start();
+    }
+    
+    private async Task HandleKeyDown(Microsoft.AspNetCore.Components.Web.KeyboardEventArgs e)
+    {
+        if (e.Key == "Enter")
+        {
+            _debounceTimer?.Stop();
+            await FilterSuppliers();
+        }
     }
 
     private async Task SelectSupplier(string id)

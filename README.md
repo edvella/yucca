@@ -3,6 +3,18 @@
 ## Overview
 Yucca is a comprehensive tool for managing inventory, sales, clients, suppliers, and financial operations for small to medium-sized businesses.
 
+## Requirements
+
+To run and develop Yucca, you need:
+
+- .NET 8.0 SDK or later
+- Visual Studio 2022 or Visual Studio Code 
+- Node.js 18.0 or later (for Tailwind CSS)
+- npm (for managing frontend dependencies)
+- A modern web browser
+
+For more information about Tailwind CSS setup and usage in this project, see the [Tailwind CSS Setup Guide](Yucca.Web/TAILWIND-README.md).
+
 ## Web Application Architecture
 
 ![Solution Architecture](doc/arch.png)

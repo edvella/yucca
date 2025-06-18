@@ -13,13 +13,32 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
+    
     - name: Setup .NET
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: 9.0.x
-    - name: Restore dependencies
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: 18
+        cache: 'npm'
+        cache-dependency-path: Yucca.Web/package.json
+    
+    - name: Install Node.js dependencies
+      run: npm ci
+      working-directory: ./Yucca.Web
+    
+    - name: Build Tailwind CSS
+      run: npm run build:css
+      working-directory: ./Yucca.Web
+    
+    - name: Restore .NET dependencies
       run: dotnet restore
-    - name: Build
+    
+    - name: Build .NET
       run: dotnet build --no-restore
+    
     - name: Test
       run: dotnet test --no-build --verbosity normal
