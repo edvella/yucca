@@ -33,7 +33,8 @@ public class SupplierTests
         result.City.Should().Be("City");
         result.State.Should().Be("State");
         result.PostCode.Should().Be("Post Code");
-        result.Country.Should().Be("Country");
+        result.Country.Name.Should().Be("United States");
+        result.Country.IsoCode.Should().Be("US");
         result.ContactPhone.Should().Be("Contact Phone");
         result.Email.Should().Be("Email");
         result.Website.Should().Be("Website");
@@ -58,7 +59,7 @@ public class SupplierTests
             City = "City",
             State = "State",
             PostCode = "Post Code",
-            Country = "Country",
+            Country = new Country { Name = "United States", IsoCode = "US" },
             ContactPhone = "Contact Phone",
             Email = "Email",
             Website = "Website",
@@ -82,7 +83,8 @@ public class SupplierTests
         result.City.Should().Be("City");
         result.State.Should().Be("State");
         result.PostCode.Should().Be("Post Code");
-        result.Country.Should().Be("Country");
+        result.Country.Name.Should().Be("United States");
+        result.Country.IsoCode.Should().Be("US");
         result.ContactPhone.Should().Be("Contact Phone");
         result.Email.Should().Be("Email");
         result.Website.Should().Be("Website");
