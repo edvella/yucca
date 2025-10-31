@@ -126,7 +126,7 @@ else
                 <label for="supplier-country" class="block text-gray-700 text-sm font-medium mb-1">Country:</label>
                 @if (_countries != null)
                 {
-                    <select id="supplier-country" class="@formElementStyle" @onchange="CountrySelected">
+                    <select id="supplier-country" class="@formElementStyle" @bind="selectedCountry">
                         @foreach (var country in _countries)
                         {
                             <option value="@country.IsoCode">@country.Name</option>
@@ -174,6 +174,27 @@ else
 @code {
     private List<Supplier>? _suppliers;
     private string _searchText = string.Empty;
+
+    private string _selectedCountry = string.Empty;
+    private string selectedCountry
+    {
+        get => _selectedCountry;
+        set {
+            _selectedCountry = value;
+            if (string.IsNullOrEmpty(_selectedCountry))
+            {
+                _supplier!.Country = null;
+            }
+            else
+            {
+                _supplier!.Country = new Country {
+                    Name = _countries.Single(_ => _.IsoCode.Equals(_selectedCountry)).Name,
+                    IsoCode = _selectedCountry
+                };
+            }
+        }
+    }
+
     private Timer? _debounceTimer;
     private const int DebounceDelayMilliseconds = 500;
     private string formElementStyle = "bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5";
@@ -260,7 +281,7 @@ else
             {
                 await RefreshSupplierList();
                 await JSRuntime.InvokeVoidAsync("alert", "Supplier added successfully!");
-                _supplier = new();
+                ClearForm();
             }
         }
         else
@@ -271,11 +292,9 @@ else
         StateHasChanged();
     }
 
-    private void CountrySelected(ChangeEventArgs args)
+    private void ClearForm()
     {
-        _supplier!.Country = new Country {
-            Name = _countries.Single(_ => _.IsoCode.Equals(args.Value)).Name, 
-            IsoCode = args.Value.ToString()
-        };
+        _supplier = new();
+        selectedCountry = string.Empty;
     }
 }
