@@ -35,7 +35,7 @@ internal sealed class SupplierService(HttpClient httpClient, ILogger<SupplierSer
         return null;
     }
 
-    public async Task<bool> AddSupplier(Supplier supplier)
+    public async Task<bool> SaveSupplier(Supplier supplier)
     {
         var response = await httpClient.PostAsJsonAsync("/api/supplier", supplier);
 
@@ -43,8 +43,10 @@ internal sealed class SupplierService(HttpClient httpClient, ILogger<SupplierSer
         {
             return true;
         }
-
-        logger.LogWarning("Failed to add supplier. StatusCode: {StatusCode}", response.StatusCode);
-        return false;
+        else
+        {
+            logger.LogWarning("Failed to add supplier. StatusCode: {StatusCode}", response.StatusCode);
+            return false;
+        }
     }
 }

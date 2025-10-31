@@ -6,16 +6,24 @@ namespace Yucca.Volatile;
 
 public class InMemorySupplierList : SupplierList
 {
-    protected List<Supplier> Suppliers = new();
+    protected List<Supplier> Suppliers = [];
 
     public override Supplier GetFirst()
     {
         return Suppliers[0];
     }
 
-    public override string Save(Supplier supplier)
+    public override string Create(Supplier supplier)
     {
         supplier.Id = Guid.NewGuid().ToString();
+        Suppliers.Add(supplier);
+
+        return supplier.Id;
+    }
+
+    public override string Update(Supplier supplier)
+    {
+        Suppliers.RemoveAll(s => s.Id == supplier.Id);
         Suppliers.Add(supplier);
 
         return supplier.Id;

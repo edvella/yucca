@@ -35,7 +35,7 @@ namespace Yucca.WebAPI.Controllers
         }
 
         [HttpPost]
-        public ActionResult<Supplier> AddSupplier([FromBody] Supplier supplier)
+        public ActionResult<Supplier> PostSupplier([FromBody] Supplier supplier)
         {
             if (supplier == null)
             {

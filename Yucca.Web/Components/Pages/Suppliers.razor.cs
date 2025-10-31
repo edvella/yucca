@@ -112,19 +112,11 @@ namespace Yucca.Web.Components.Pages
 
         private async Task SaveSupplier()
         {
-            if (_isNewSupplier)
+            if (await SupplierService.SaveSupplier(_supplier!))
             {
-                if (await SupplierService.AddSupplier(_supplier!))
-                {
-                    await RefreshSupplierList();
-                    await JSRuntime.InvokeVoidAsync("alert", "Supplier added successfully!");
-                    ClearForm();
-                }
-            }
-            else
-            {
-                // TODO: This will need implementation in the SupplierService
-                await JSRuntime.InvokeVoidAsync("alert", "Update functionality not implemented yet");
+                await RefreshSupplierList();
+                await JSRuntime.InvokeVoidAsync("alert", "Supplier saved successfully!");
+                ClearForm();
             }
             StateHasChanged();
         }

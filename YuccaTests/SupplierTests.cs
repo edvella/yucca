@@ -42,6 +42,26 @@ public class SupplierTests
     }
 
     [Fact]
+    public void CanUpdateSupplierDetails()
+    {
+        var id = AddSupplier();
+
+        var supplier = suppliers.Get(id);
+        supplier.Name = "Supplier 1 Updated";
+        supplier.AddressLine1 = "New Address Line 1";
+        supplier.ContactPhone = "New Contact Phone";
+
+        suppliers.Save(supplier);
+
+        var result = suppliers.Get(id);
+
+        result.Should().NotBeNull();
+        result.Name.Should().Be("Supplier 1 Updated");
+        result.AddressLine1.Should().Be("New Address Line 1");
+        result.ContactPhone.Should().Be("New Contact Phone");
+    }
+
+    [Fact]
     public void NewSupplierWillHaveAnId()
     {
         var result = AddSupplier();
