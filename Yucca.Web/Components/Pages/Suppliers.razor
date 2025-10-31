@@ -271,8 +271,11 @@ else
         StateHasChanged();
     }
 
-    private void CountrySelected()
+    private void CountrySelected(ChangeEventArgs args)
     {
-        _supplier!.Country = new Country { Name = "Bob", IsoCode = "BB" };
+        _supplier!.Country = new Country {
+            Name = _countries.Single(_ => _.IsoCode.Equals(args.Value)).Name, 
+            IsoCode = args.Value.ToString()
+        };
     }
 }
