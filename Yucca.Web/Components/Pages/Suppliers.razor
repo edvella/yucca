@@ -262,6 +262,7 @@ else
     private async Task SelectSupplier(string id)
     {
         _supplier = await SupplierService.GetSupplierById(id);
+        selectedCountry = _supplier.Country.IsoCode;
         _isNewSupplier = false;
 
         StateHasChanged();
