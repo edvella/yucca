@@ -49,4 +49,19 @@ internal sealed class SupplierService(HttpClient httpClient, ILogger<SupplierSer
             return false;
         }
     }
+
+    public async Task<bool> DeleteSupplier(string id)
+    {
+        if (string.IsNullOrWhiteSpace(id)) return false;
+
+        var response = await httpClient.DeleteAsync($"/api/supplier/{id}");
+
+        if (response.IsSuccessStatusCode)
+        {
+            return true;
+        }
+
+        logger.LogWarning("Failed to delete supplier with ID {Id}. StatusCode: {StatusCode}", id, response.StatusCode);
+        return false;
+    }
 }

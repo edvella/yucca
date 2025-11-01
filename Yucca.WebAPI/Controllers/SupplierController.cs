@@ -45,5 +45,23 @@ namespace Yucca.WebAPI.Controllers
             supplierList.Save(supplier);
             return CreatedAtAction(nameof(GetSuppliers), new { id = supplier.Id }, supplier);
         }
+
+        [HttpDelete("{id}")]
+        public IActionResult DeleteSupplier(string id)
+        {
+            if (string.IsNullOrEmpty(id))
+            {
+                return BadRequest("Supplier ID is required.");
+            }
+
+            var existing = supplierList.Get(id);
+            if (existing == null)
+            {
+                return NotFound();
+            }
+
+            supplierList.Remove(id);
+            return NoContent();
+        }
     }
 }
