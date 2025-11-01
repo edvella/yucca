@@ -169,6 +169,11 @@ else
             <button type="button" class="@buttonStyle" @onclick="ClearForm">
                 Clear
             </button>
+            <button type="button" class="@buttonStyle" @onclick="ExportCsv">
+                Export
+            </button>
         </div>
     </form>
 }
+
+<script src="@Assets["js/dataExport.js"]"></script>
