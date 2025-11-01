@@ -11,7 +11,9 @@ namespace Yucca.Web.Components.Pages
         private string _searchText = string.Empty;
         private System.Timers.Timer? _debounceTimer;
         private const int DebounceDelayMilliseconds = 500;
+        private string formLabelStyle = "block mb-2 text-sm font-medium text-gray-900";
         private string formElementStyle = "bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5";
+        private string buttonStyle = "inline-flex items-center px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg text-sm transition-colors duration-200 mb-2 mr-2";
 
         private string _selectedCountry = string.Empty;
         private string selectedCountry
@@ -124,6 +126,7 @@ namespace Yucca.Web.Components.Pages
         private void ClearForm()
         {
             _supplier = new();
+            _isNewSupplier = true;
             selectedCountry = string.Empty;
         }
     }

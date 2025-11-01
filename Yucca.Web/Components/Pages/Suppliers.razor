@@ -92,37 +92,37 @@ else
     <form method="post" @onsubmit="SaveSupplier" @formname="supplier-form" class="bg-white shadow-md rounded-lg p-6 mb-6">
         <AntiforgeryToken />
         <div class="mb-4">
-            <label for="supplier-id" class="block text-gray-700 text-sm font-medium mb-1">ID:</label>
+            <label for="supplier-id" class="@formLabelStyle">ID:</label>
             <InputText id="supplier-id" class="bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5" @bind-Value="_supplier!.Id" type="text" readonly />
         </div>
         <div class="mb-4">
-            <label for="supplier-name" class="block text-gray-700 text-sm font-medium mb-1">Name:</label>
+            <label for="supplier-name" class="@formLabelStyle">Name:</label>
             <InputText id="supplier-name" class="@formElementStyle" @bind-Value="_supplier!.Name" type="text" />
         </div>
         <div class="mb-4">
-            <label for="supplier-address-line1" class="block text-gray-700 text-sm font-medium mb-1">Address Line 1:</label>
+            <label for="supplier-address-line1" class="@formLabelStyle">Address Line 1:</label>
             <InputText id="supplier-address-line1" class="@formElementStyle" @bind-Value="_supplier!.AddressLine1" type="text" />
         </div>    <div class="mb-4">
-            <label for="supplier-address-line2" class="block text-gray-700 text-sm font-medium mb-1">Address Line 2:</label>
+            <label for="supplier-address-line2" class="@formLabelStyle">Address Line 2:</label>
             <InputText id="supplier-address-line2" class="@formElementStyle" @bind-Value="_supplier!.AddressLine2" type="text" />
         </div>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div class="mb-4">
-                <label for="supplier-city" class="block text-gray-700 text-sm font-medium mb-1">City:</label>
+                <label for="supplier-city" class="@formLabelStyle">City:</label>
                 <InputText id="supplier-city" class="@formElementStyle" @bind-Value="_supplier!.City" type="text" />
             </div>
             <div class="mb-4">
-                <label for="supplier-state" class="block text-gray-700 text-sm font-medium mb-1">State:</label>
+                <label for="supplier-state" class="@formLabelStyle">State:</label>
                 <InputText id="supplier-state" class="@formElementStyle" @bind-Value="_supplier!.State" type="text" />
             </div>
         </div>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div class="mb-4">
-                <label for="supplier-postcode" class="block text-gray-700 text-sm font-medium mb-1">Post Code:</label>
+                <label for="supplier-postcode" class="@formLabelStyle">Post Code:</label>
                 <InputText id="supplier-postcode" class="@formElementStyle" @bind-Value="_supplier!.PostCode" type="text" />
             </div>
             <div class="mb-4">
-                <label for="supplier-country" class="block text-gray-700 text-sm font-medium mb-1">Country:</label>
+                <label for="supplier-country" class="@formLabelStyle">Country:</label>
                 @if (_countries != null)
                 {
                     <select id="supplier-country" class="@formElementStyle" @bind="selectedCountry">
@@ -139,23 +139,23 @@ else
             </div>
         </div>
         <div class="mb-4">
-            <label for="supplier-contact-phone" class="block text-gray-700 text-sm font-medium mb-1">Contact Phone:</label>
+            <label for="supplier-contact-phone" class="@formLabelStyle">Contact Phone:</label>
             <InputText id="supplier-contact-phone" class="@formElementStyle" @bind-Value="_supplier!.ContactPhone" type="tel" />
         </div>
         <div class="mb-4">
-            <label for="supplier-email" class="block text-gray-700 text-sm font-medium mb-1">Email:</label>
+            <label for="supplier-email" class="@formLabelStyle">Email:</label>
             <InputText id="supplier-email" class="@formElementStyle" @bind-Value="_supplier!.Email" type="email" />
         </div>
         <div class="mb-4">
-            <label for="supplier-website" class="block text-gray-700 text-sm font-medium mb-1">Website:</label>
+            <label for="supplier-website" class="@formLabelStyle">Website:</label>
             <InputText id="supplier-website" class="@formElementStyle" @bind-Value="_supplier!.Website" type="url" />
         </div>
         <div class="mb-6">
-            <label for="supplier-tax-number" class="block text-gray-700 text-sm font-medium mb-1">Tax Number:</label>
+            <label for="supplier-tax-number" class="@formLabelStyle">Tax Number:</label>
             <InputText id="supplier-tax-number" class="@formElementStyle" @bind-Value="_supplier!.TaxNumber" type="text" />
         </div>
-        <div>
-            <button type="submit" class="inline-flex items-center px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg text-sm transition-colors duration-200">
+        <div class="flex fitems-center space-x-3">
+            <button type="submit" class="@buttonStyle">
                 @if (_isNewSupplier)
                 {
                     <PlusIcon CssClass="w-4 h-4 mr-2" Size="16" />
@@ -165,6 +165,9 @@ else
                 {
                     <span>Update Supplier</span>
                 }
+            </button>
+            <button type="button" class="@buttonStyle" @onclick="ClearForm">
+                Clear
             </button>
         </div>
     </form>
