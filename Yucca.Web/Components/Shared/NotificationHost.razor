@@ -1,0 +1,38 @@
+@implements IDisposable
+@using Yucca.Web.Services
+@inject NotificationService NotificationService
+
+<Notification @ref="_notificationComponent" 
+              Title="@_title"
+              Message="@_message"
+              Type="@_type" />
+
+@code {
+    private Notification? _notificationComponent;
+    private string _title = "";
+    private string _message = "";
+    private Notification.NotificationType _type = Notification.NotificationType.Info;
+
+    protected override void OnInitialized()
+    {
+        NotificationService.OnNotificationShow += ShowNotification;
+    }
+
+    public void Dispose()
+    {
+        NotificationService.OnNotificationShow -= ShowNotification;
+    }
+
+    private void ShowNotification(string title, string message, Notification.NotificationType type)
+    {
+        _title = title;
+        _message = message;
+        _type = type;
+        
+        if (_notificationComponent is not null)
+        {
+            _notificationComponent.Show();
+            StateHasChanged();
+        }
+    }
+}

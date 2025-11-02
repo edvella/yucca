@@ -10,8 +10,8 @@ var apiEndpoint = builder.Configuration["ApiEndpoint"]
 
 builder.Services.AddSingleton<SupplierService>();
 builder.Services.AddHttpClient<SupplierService>(c => c.BaseAddress = new Uri(apiEndpoint));
+builder.Services.AddSingleton<NotificationService>();
 
-// Add services to the container.
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 

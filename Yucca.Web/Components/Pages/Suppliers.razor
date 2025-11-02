@@ -2,12 +2,11 @@
 @using Newtonsoft.Json
 @using Yucca.Inventory
 @using Yucca.Web.Services
-@using Microsoft.AspNetCore.Components.Web
-@using Yucca.Web.Components.Shared.Icons
 @implements IDisposable
 
 @inject SupplierService SupplierService
 @inject IJSRuntime JSRuntime
+@inject NotificationService NotificationService
 
 @rendermode InteractiveServer
 @attribute [StreamRendering(true)]

@@ -15,7 +15,7 @@ Tailwind CSS building has been integrated into the GitHub Actions workflow. The 
 
 1. Navigate to the Yucca.Web directory:
 ```
-cd d:\source\yucca\Yucca.Web
+cd Yucca.Web
 ```
 
 2. Install the dependencies:

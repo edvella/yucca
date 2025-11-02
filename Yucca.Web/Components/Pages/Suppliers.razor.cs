@@ -103,18 +103,12 @@ namespace Yucca.Web.Components.Pages
             StateHasChanged();
         }
 
-        private void CreateNewSupplier()
-        {
-            _supplier = new();
-            _isNewSupplier = true;
-        }
-
         private async Task SaveSupplier()
         {
             if (await SupplierService.SaveSupplier(_supplier!))
             {
                 await RefreshSupplierList();
-                await JSRuntime.InvokeVoidAsync("alert", "Supplier saved successfully!");
+                NotificationService.ShowSuccess("Supplier added successfully!");
                 ClearForm();
             }
             StateHasChanged();
@@ -135,17 +129,17 @@ namespace Yucca.Web.Components.Pages
             if (await SupplierService.DeleteSupplier(id))
             {
                 await RefreshSupplierList();
-                await JSRuntime.InvokeVoidAsync("alert", "Supplier deleted");
+                NotificationService.ShowSuccess("Supplier deleted");
             }
             else
             {
-                await JSRuntime.InvokeVoidAsync("alert", "Failed to delete supplier");
+                NotificationService.ShowError("Failed to delete supplier");
             }
         }
 
         private async Task SupplierDetails(string id)
         {
-            await JSRuntime.InvokeVoidAsync("alert", "Feature not yet available!");
+            NotificationService.ShowWarning("Feature not yet available!");
         }
 
         private async Task ClearSearch()
@@ -199,7 +193,7 @@ namespace Yucca.Web.Components.Pages
             catch (Exception ex)
             {
                 Console.WriteLine($"Error exporting CSV: {ex.Message}");
-                await JSRuntime.InvokeVoidAsync("alert", "Failed to export CSV");
+                NotificationService.ShowError("Failed to export CSV");
             }
         }
 
