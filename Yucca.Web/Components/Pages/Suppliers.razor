@@ -27,6 +27,12 @@
                @bind:event="oninput" 
                @onkeydown="HandleKeyDown"
                @bind:after="StartSearchTimer" />
+        @if (!string.IsNullOrEmpty(_searchText))
+        {
+            <button type="button" @onclick="ClearSearch" class="absolute inset-y-0 end-0 m-1 w-8 h-8 rounded-full flex items-center justify-center text-gray-600 focus:outline-none" aria-label="Clear search">
+                <CloseIcon CssClass="w-5 h-5 text-gray-500" Size="20" />
+            </button>
+        }
     </div>
 </div>
 

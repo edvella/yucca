@@ -148,6 +148,13 @@ namespace Yucca.Web.Components.Pages
             await JSRuntime.InvokeVoidAsync("alert", "Feature not yet available!");
         }
 
+        private async Task ClearSearch()
+        {
+            _searchText = string.Empty;
+            _debounceTimer?.Stop();
+            await RefreshSupplierList();
+        }
+
         private async Task ExportCsv()
         {
             try
