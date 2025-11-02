@@ -80,7 +80,10 @@ else
                         <td class="px-6 py-4">@supplier.Country</td>
                         <td class="px-6 py-4">@supplier.ContactPhone</td>
                         <td class="px-6 py-4">@supplier.Website</td>
-                        <td class="px-6 py-4 text-right">
+                        <td class="flex justify-end px-6 py-4 space-x-2">
+                            <button class="inline-flex items-center px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded-md text-sm" @onclick:stopPropagation @onclick="() => SupplierDetails(supplier.Id)">
+                                <span>Details</span>
+                            </button>
                             <button class="inline-flex items-center px-3 py-1.5 bg-red-600 hover:bg-red-700 text-white rounded-md text-sm" @onclick:stopPropagation @onclick="() => DeleteSupplier(supplier.Id)">
                                 <TrashIcon CssClass="w-4 h-4 mr-2" Size="16" />
                                 <span>Delete</span>
@@ -161,8 +164,8 @@ else
             <label for="supplier-tax-number" class="block mb-2 text-sm font-medium text-gray-900">Tax Number:</label>
             <InputText id="supplier-tax-number" class="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" @bind-Value="_supplier!.TaxNumber" type="text" />
         </div>
-        <div class="flex fitems-center space-x-3">
-            <button type="submit" class="inline-flex items-center px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg text-sm transition-colors duration-200 mb-2 mr-2">
+        <div class="flex space-x-3">
+            <button type="submit" class="inline-flex items-center px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg text-sm transition-colors duration-200 mb-2">
                 @if (_isNewSupplier)
                 {
                     <PlusIcon CssClass="w-4 h-4 mr-2" Size="16" />
@@ -173,10 +176,10 @@ else
                     <span>Update Supplier</span>
                 }
             </button>
-            <button type="button" class="inline-flex items-center px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg text-sm transition-colors duration-200 mb-2 mr-2" @onclick="ClearForm">
+            <button type="button" class="inline-flex items-center px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg text-sm transition-colors duration-200 mb-2" @onclick="ClearForm">
                 Clear
             </button>
-            <button type="button" class="inline-flex items-center px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg text-sm transition-colors duration-200 mb-2 mr-2" @onclick="ExportCsv">
+            <button type="button" class="inline-flex items-center px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg text-sm transition-colors duration-200 mb-2" @onclick="ExportCsv">
                 Export
             </button>
         </div>

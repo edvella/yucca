@@ -11,7 +11,6 @@ namespace Yucca.Web.Components.Pages
         private string _searchText = string.Empty;
         private System.Timers.Timer? _debounceTimer;
         private const int DebounceDelayMilliseconds = 500;
-        private string buttonStyle = "inline-flex items-center px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg text-sm transition-colors duration-200 mb-2 mr-2";
 
         private string _selectedCountry = string.Empty;
         private string selectedCountry
@@ -142,6 +141,11 @@ namespace Yucca.Web.Components.Pages
             {
                 await JSRuntime.InvokeVoidAsync("alert", "Failed to delete supplier");
             }
+        }
+
+        private async Task SupplierDetails(string id)
+        {
+            await JSRuntime.InvokeVoidAsync("alert", "Feature not yet available!");
         }
 
         private async Task ExportCsv()
