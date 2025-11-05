@@ -70,7 +70,7 @@ else
                 <tr>
                     <th scope="col" class="px-6 py-3">Name</th>
                     <th scope="col" class="px-6 py-3">City</th>
-                    <th scope="col" class="px-6 py-3">Country</th>
+                    <th scope="col" class="px-6 py-3">Country Code</th>
                     <th scope="col" class="px-6 py-3">Phone</th>
                     <th scope="col" class="px-6 py-3">Website</th>
                     <th scope="col" class="px-6 py-3 text-right">&nbsp;</th>
@@ -82,7 +82,7 @@ else
                         class="@(supplier.Id == _supplier?.Id ? "bg-blue-50 border-l-4 border-blue-500" : "bg-white border-b hover:bg-gray-50") cursor-pointer transition-all duration-200">
                         <td class="px-6 py-4 font-medium text-gray-900">@supplier.Name</td>
                         <td class="px-6 py-4">@supplier.City</td>
-                        <td class="px-6 py-4">@supplier.Country</td>
+                        <td class="px-6 py-4">@supplier.Country.IsoCode</td>
                         <td class="px-6 py-4">@supplier.ContactPhone</td>
                         <td class="px-6 py-4">@supplier.Website</td>
                         <td class="flex justify-end px-6 py-4 space-x-2">
@@ -104,48 +104,57 @@ else
 @if (_supplier != null)
 {
     <h4 class="text-xl font-semibold mt-8 mb-4 text-gray-800">@(_isNewSupplier ? "Add Supplier" : "Edit Supplier")</h4>
-    <form method="post" @onsubmit="SaveSupplier" @formname="supplier-form" class="bg-white shadow-md rounded-lg p-6 mb-6">
+    <EditForm Model="_supplier" OnValidSubmit="SaveSupplier" class="bg-white shadow-md rounded-lg p-6 mb-6">
         <AntiforgeryToken />
         <div class="mb-4">
             <label for="supplier-id" class="block mb-2 text-sm font-medium text-gray-900">ID:</label>
-            <InputText id="supplier-id" class="bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5" @bind-Value="_supplier!.Id" type="text" readonly />
+            <InputText id="supplier-id" @bind-Value="_supplier.Id" type="text" readonly
+                class="bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5" />
         </div>
         <div class="mb-4">
             <label for="supplier-name" class="block mb-2 text-sm font-medium text-gray-900">Name:</label>
-            <InputText id="supplier-name" class="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" @bind-Value="_supplier!.Name" type="text" />
+            <InputText id="supplier-name" @bind-Value=" _supplier.Name" type="text"
+                class="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"  />
         </div>
         <div class="mb-4">
             <label for="supplier-address-line1" class="block mb-2 text-sm font-medium text-gray-900">Address Line 1:</label>
-            <InputText id="supplier-address-line1" class="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" @bind-Value="_supplier!.AddressLine1" type="text" />
+            <InputText id="supplier-address-line1" @bind-Value="_supplier.AddressLine1" type="text"
+                class="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" />
         </div>    <div class="mb-4">
             <label for="supplier-address-line2" class="block mb-2 text-sm font-medium text-gray-900">Address Line 2:</label>
-            <InputText id="supplier-address-line2" class="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" @bind-Value="_supplier!.AddressLine2" type="text" />
+            <InputText id="supplier-address-line2" @bind-Value="_supplier.AddressLine2" type="text"
+                class="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" />
         </div>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div class="mb-4">
                 <label for="supplier-city" class="block mb-2 text-sm font-medium text-gray-900">City:</label>
-                <InputText id="supplier-city" class="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" @bind-Value="_supplier!.City" type="text" />
+                <InputText id="supplier-city" @bind-Value="_supplier.City" type="text"
+                    class="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" />
             </div>
             <div class="mb-4">
                 <label for="supplier-state" class="block mb-2 text-sm font-medium text-gray-900">State:</label>
-                <InputText id="supplier-state" class="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" @bind-Value="_supplier!.State" type="text" />
+                <InputText id="supplier-state" @bind-Value="_supplier.State" type="text"
+                    class="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" />
             </div>
         </div>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div class="mb-4">
                 <label for="supplier-postcode" class="block mb-2 text-sm font-medium text-gray-900">Post Code:</label>
-                <InputText id="supplier-postcode" class="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" @bind-Value="_supplier!.PostCode" type="text" />
+                <InputText id="supplier-postcode" @bind-Value="_supplier.PostCode" type="text"
+                    class="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" />
             </div>
             <div class="mb-4">
                 <label for="supplier-country" class="block mb-2 text-sm font-medium text-gray-900">Country:</label>
                 @if (_countries != null)
                 {
-                    <select id="supplier-country" class="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" @bind="selectedCountry">
-                        @foreach (var country in _countries)
+                    <InputSelect @bind-Value="_supplier.Country!.IsoCode"
+                                 class="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                        <option value=""></option>
+                        @foreach (var country in _countries!)
                         {
                             <option value="@country.IsoCode">@country.Name</option>
                         }
-                    </select>
+                    </InputSelect>
                 }
                 else
                 {
@@ -155,19 +164,27 @@ else
         </div>
         <div class="mb-4">
             <label for="supplier-contact-phone" class="block mb-2 text-sm font-medium text-gray-900">Contact Phone:</label>
-            <InputText id="supplier-contact-phone" class="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" @bind-Value="_supplier!.ContactPhone" type="tel" />
+            <InputText id="supplier-contact-phone" @bind-Value="_supplier.ContactPhone" type="tel"
+                class="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" />
         </div>
         <div class="mb-4">
             <label for="supplier-email" class="block mb-2 text-sm font-medium text-gray-900">Email:</label>
-            <InputText id="supplier-email" class="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" @bind-Value="_supplier!.Email" type="email" />
+            <InputText id="supplier-email" @bind-Value="_supplier.Email" type="email"
+                class="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" />
         </div>
         <div class="mb-4">
             <label for="supplier-website" class="block mb-2 text-sm font-medium text-gray-900">Website:</label>
-            <InputText id="supplier-website" class="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" @bind-Value="_supplier!.Website" type="url" />
+            <InputText id="supplier-website" @bind-Value="_supplier.Website" type="url"
+                class="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" />
         </div>
         <div class="mb-6">
             <label for="supplier-tax-number" class="block mb-2 text-sm font-medium text-gray-900">Tax Number:</label>
-            <InputText id="supplier-tax-number" class="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" @bind-Value="_supplier!.TaxNumber" type="text" />
+            <InputText id="supplier-tax-number" @bind-Value="_supplier.TaxNumber" type="text"
+                class="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" />
+        </div>
+        <div class="mb-6">
+            <DataAnnotationsValidator />
+            <ValidationSummary class="mt-2 text-sm text-red-600" />
         </div>
         <div class="flex space-x-3">
             <button type="submit" class="inline-flex items-center px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg text-sm transition-colors duration-200 mb-2">
@@ -188,7 +205,7 @@ else
                 Export
             </button>
         </div>
-    </form>
+    </EditForm>
 }
 
 <script src="@Assets["js/dataExport.js"]"></script>

@@ -25,7 +25,7 @@ public class Supplier
     public string AddressLine2 { get; set; }
     public string City { get; set; }
     public string State { get; set; }
-    public Country Country { get; set; }
+    public Country Country { get; set; } = new();
     public string PostCode { get; set; }
     public string ContactPhone { get; set; }
     public string Email { get; set; }

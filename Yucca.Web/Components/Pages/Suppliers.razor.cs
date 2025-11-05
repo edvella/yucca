@@ -12,28 +12,6 @@ namespace Yucca.Web.Components.Pages
         private System.Timers.Timer? _debounceTimer;
         private const int DebounceDelayMilliseconds = 500;
 
-        private string _selectedCountry = string.Empty;
-        private string selectedCountry
-        {
-            get => _selectedCountry;
-            set
-            {
-                _selectedCountry = value;
-                if (string.IsNullOrEmpty(_selectedCountry))
-                {
-                    _supplier!.Country = null;
-                }
-                else
-                {
-                    _supplier!.Country = new Country
-                    {
-                        Name = _countries.Single(_ => _.IsoCode.Equals(_selectedCountry)).Name,
-                        IsoCode = _selectedCountry
-                    };
-                }
-            }
-        }
-
         public void Dispose()
         {
             _debounceTimer?.Dispose();
@@ -97,7 +75,6 @@ namespace Yucca.Web.Components.Pages
         private async Task SelectSupplier(string id)
         {
             _supplier = await SupplierService.GetSupplierById(id);
-            selectedCountry = _supplier.Country.IsoCode;
             _isNewSupplier = false;
 
             StateHasChanged();
@@ -118,7 +95,6 @@ namespace Yucca.Web.Components.Pages
         {
             _supplier = new();
             _isNewSupplier = true;
-            selectedCountry = string.Empty;
         }
 
         private async Task DeleteSupplier(string id)
