@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
 using Newtonsoft.Json;
+using System.Text;
 using Yucca.Inventory;
 
 namespace Yucca.Web.Components.Pages
@@ -179,6 +180,54 @@ namespace Yucca.Web.Components.Pages
             var needsQuotes = input.Contains(',') || input.Contains('\"') || input.Contains('\n') || input.Contains('\r');
             var escaped = input.Replace("\"", "\"\"");
             return needsQuotes ? $"\"{escaped}\"" : escaped;
+        }
+
+        private async Task PrintSuppliers()
+        {
+            try
+            {
+                var list = _suppliers ?? new List<Supplier>();
+
+                var sb = new StringBuilder();
+                sb.AppendLine($"<h1 style=\"font-family: Arial, Helvetica, sans-serif;\">Supplier List</h1>");
+                sb.AppendLine($"<div style=\"font-family: Arial, Helvetica, sans-serif; margin-bottom: 1rem;\">Printed: {DateTime.Now:f}</div>");
+
+                sb.AppendLine("<table style=\"width:100%; border-collapse:collapse; font-family: Arial, Helvetica, sans-serif;\">");
+                sb.AppendLine("<thead>");
+                sb.AppendLine("<tr>");
+                sb.AppendLine("<th style=\"border:1px solid #ddd; padding:8px; text-align:left;\">Name</th>");
+                sb.AppendLine("<th style=\"border:1px solid #ddd; padding:8px; text-align:left;\">Address</th>");
+                sb.AppendLine("<th style=\"border:1px solid #ddd; padding:8px; text-align:left;\">Phone</th>");
+                sb.AppendLine("</tr>");
+                sb.AppendLine("</thead>");
+                sb.AppendLine("<tbody>");
+
+                foreach (var s in list)
+                {
+                    string Escape(string? input) => string.IsNullOrEmpty(input) ? string.Empty : System.Net.WebUtility.HtmlEncode(input);
+
+                    var addressParts = new[] { s.AddressLine1, s.AddressLine2, s.City, s.Country?.IsoCode }
+                        .Where(p => !string.IsNullOrWhiteSpace(p))
+                        .Select(p => Escape(p));
+
+                    var address = string.Join(", ", addressParts);
+
+                    sb.AppendLine("<tr>");
+                    sb.AppendLine($"<td style=\"border:1px solid #ddd; padding:8px; vertical-align:top;\">{Escape(s.Name)}</td>");
+                    sb.AppendLine($"<td style=\"border:1px solid #ddd; padding:8px; vertical-align:top;\">{address}</td>");
+                    sb.AppendLine($"<td style=\"border:1px solid #ddd; padding:8px; vertical-align:top;\">{Escape(s.ContactPhone)}</td>");
+                    sb.AppendLine("</tr>");
+                }
+
+                sb.AppendLine("</tbody>");
+                sb.AppendLine("</table>");
+
+                await JSRuntime.InvokeVoidAsync("printHtml", sb.ToString());
+            }
+            catch (Exception ex)
+            {
+                NotificationService.ShowError($"Printing failed: {ex.Message}");
+            }
         }
     }
 }
