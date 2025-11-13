@@ -1,6 +1,7 @@
 using FluentAssertions;
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 using Xunit;
 using Yucca.Inventory;
 using Yucca.Volatile;
@@ -9,7 +10,7 @@ namespace YuccaTests;
 
 public class SupplierTests
 {
-    readonly SupplierList suppliers;
+    readonly ISupplierList suppliers;
 
     public SupplierTests()
     {
@@ -22,11 +23,11 @@ public class SupplierTests
     }
 
     [Fact]
-    public void CanStoreSupplierDetails()
+    public async Task CanStoreSupplierDetails()
     {
-        AddSupplier();
+        await AddSupplier();
 
-        var result = suppliers.GetFirst();
+        var result = (await suppliers.FilterByName(""))!.First();
         result.Name.Should().Be("Supplier 1");
         result.AddressLine1.Should().Be("Address Line 1");
         result.AddressLine2.Should().Be("Address Line 2");
@@ -42,18 +43,18 @@ public class SupplierTests
     }
 
     [Fact]
-    public void CanUpdateSupplierDetails()
+    public async Task CanUpdateSupplierDetails()
     {
-        var id = AddSupplier();
+        var id = await AddSupplier();
 
-        var supplier = suppliers.Get(id);
+        var supplier = await suppliers.Get(id);
         supplier.Name = "Supplier 1 Updated";
         supplier.AddressLine1 = "New Address Line 1";
         supplier.ContactPhone = "New Contact Phone";
 
-        suppliers.Save(supplier);
+        await suppliers.Save(supplier);
 
-        var result = suppliers.Get(id);
+        var result = await suppliers.Get(id);
 
         result.Should().NotBeNull();
         result.Name.Should().Be("Supplier 1 Updated");
@@ -62,14 +63,14 @@ public class SupplierTests
     }
 
     [Fact]
-    public void NewSupplierWillHaveAnId()
+    public async Task NewSupplierWillHaveAnId()
     {
-        var result = AddSupplier();
+        var result = await AddSupplier();
 
         Guid.Parse(result).Should().NotBeEmpty();
     }
 
-    private string AddSupplier()
+    private async Task<string> AddSupplier()
     {
         var supplier = new Supplier
         {
@@ -86,15 +87,15 @@ public class SupplierTests
             TaxNumber = "Tax Number"
         };
 
-        return suppliers.Save(supplier);
+        return await suppliers.Save(supplier);
     }
 
     [Fact]
-    public void CanGetSupplierById()
+    public async Task CanGetSupplierById()
     {
-        var id = AddSupplier();
+        var id = await AddSupplier();
 
-        var result = suppliers.Get(id);
+        var result = await suppliers.Get(id);
 
         result.Should().NotBeNull();
         result.Name.Should().Be("Supplier 1");
@@ -112,14 +113,14 @@ public class SupplierTests
     }
 
     [Fact]
-    public void CanFilterSupplierListByName()
+    public async Task CanFilterSupplierListByName()
     {
-        suppliers.Save(new Supplier { Name = "Space Toys Co. Ltd." });
-        suppliers.Save(new Supplier { Name = "Omega Widgets" });
-        suppliers.Save(new Supplier { Name = "Moon Industries" });
-        suppliers.Save(new Supplier { Name = "Moon Patrol Tools" });
+        await suppliers.Save(new Supplier { Name = "Space Toys Co. Ltd." });
+        await suppliers.Save(new Supplier { Name = "Omega Widgets" });
+        await suppliers.Save(new Supplier { Name = "Moon Industries" });
+        await suppliers.Save(new Supplier { Name = "Moon Patrol Tools" });
 
-        var result = suppliers.FilterByName("Moon");
+        var result = (await suppliers.FilterByName("Moon")).ToList();
         
         result.Should().HaveCount(2);
         result.Should().Contain(s => s.Name == "Moon Industries");
@@ -127,14 +128,14 @@ public class SupplierTests
     }
 
     [Fact]
-    public void EmptySearchStringResultsInFullSupplierList()
+    public async Task EmptySearchStringResultsInFullSupplierList()
     {
-        suppliers.Save(new Supplier { Name = "Space Toys Co. Ltd." });
-        suppliers.Save(new Supplier { Name = "Omega Widgets" });
-        suppliers.Save(new Supplier { Name = "Moon Industries" });
-        suppliers.Save(new Supplier { Name = "Moon Patrol Tools" });
+        await suppliers.Save(new Supplier { Name = "Space Toys Co. Ltd." });
+        await suppliers.Save(new Supplier { Name = "Omega Widgets" });
+        await suppliers.Save(new Supplier { Name = "Moon Industries" });
+        await suppliers.Save(new Supplier { Name = "Moon Patrol Tools" });
 
-        var result = suppliers.FilterByName("");
+        var result = (await suppliers.FilterByName("")).ToList();
 
         result.Should().HaveCount(4);
         result.Should().Contain(s => s.Name == "Space Toys Co. Ltd.");
@@ -144,26 +145,26 @@ public class SupplierTests
     }
 
     [Fact]
-    public void CanRemoveSupplier()
+    public async Task CanRemoveSupplier()
     {
-        var id = AddSupplier();
+        var id = await AddSupplier();
 
-        suppliers.Remove(id);
+        await suppliers.Remove(id);
 
-        var result = suppliers.FilterByName("");
+        var result = (await suppliers.FilterByName("")).ToList();
 
         result.Should().HaveCount(0);
     }
 
     [Fact]
-    public void CanRemoveRequiredSupplier()
+    public async Task CanRemoveRequiredSupplier()
     {
-        var id2 = suppliers.Save(new Supplier { Name = "Omega Widgets" });
-        var id = AddSupplier();
+        var id2 = await suppliers.Save(new Supplier { Name = "Omega Widgets" });
+        var id = await AddSupplier();
 
-        suppliers.Remove(id);
+        await suppliers.Remove(id);
 
-        var result = suppliers.FilterByName("");
+        var result = (await suppliers.FilterByName("")).ToList();
 
         result.Should().HaveCount(1);
         result.First().Id.Should().Be(id2);

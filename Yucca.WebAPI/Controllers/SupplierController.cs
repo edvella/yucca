@@ -1,5 +1,4 @@
 using Microsoft.AspNetCore.Mvc;
-using Yucca.Volatile;
 using Yucca.Inventory;
 
 namespace Yucca.WebAPI.Controllers
@@ -8,23 +7,29 @@ namespace Yucca.WebAPI.Controllers
     [ApiController]
     public class SupplierController : ControllerBase
     {
-        private static readonly InMemorySupplierList supplierList = new();
-        
-        [HttpGet]
-        public ActionResult<IEnumerable<Supplier>> GetSuppliers([FromQuery] string name = "")
+        private readonly ISupplierList _supplierList;
+
+        public SupplierController(ISupplierList supplierList)
         {
-            return Ok(supplierList.FilterByName(name));
+            _supplierList = supplierList;
+        }
+
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<Supplier>>> GetSuppliers([FromQuery] string name = "")
+        {
+            var suppliers = await _supplierList.FilterByName(name);
+            return Ok(suppliers);
         }
 
         [HttpGet("{id}")]
-        public ActionResult<Supplier> GetSupplier(string id)
+        public async Task<ActionResult<Supplier>> GetSupplier(string id)
         {
             if (string.IsNullOrEmpty(id))
             {
                 return BadRequest("Supplier ID is required.");
             }
             
-            var supplier = supplierList.Get(id);
+            var supplier = await _supplierList.Get(id);
             
             if (supplier == null)
             {
@@ -35,32 +40,32 @@ namespace Yucca.WebAPI.Controllers
         }
 
         [HttpPost]
-        public ActionResult<Supplier> PostSupplier([FromBody] Supplier supplier)
+        public async Task<ActionResult<Supplier>> PostSupplier([FromBody] Supplier supplier)
         {
             if (supplier == null)
             {
                 return BadRequest("Supplier data is required.");
             }
 
-            supplierList.Save(supplier);
+            await _supplierList.Save(supplier);
             return CreatedAtAction(nameof(GetSuppliers), new { id = supplier.Id }, supplier);
         }
 
         [HttpDelete("{id}")]
-        public IActionResult DeleteSupplier(string id)
+        public async Task<IActionResult> DeleteSupplier(string id)
         {
             if (string.IsNullOrEmpty(id))
             {
                 return BadRequest("Supplier ID is required.");
             }
 
-            var existing = supplierList.Get(id);
+            var existing = await _supplierList.Get(id);
             if (existing == null)
             {
                 return NotFound();
             }
 
-            supplierList.Remove(id);
+            await _supplierList.Remove(id);
             return NoContent();
         }
     }

@@ -7,7 +7,7 @@ namespace Yucca;
 
 public class SupplierOps
 {
-    private static SupplierList supplierList = new InMemorySupplierList();
+    private static ISupplierList supplierList = new InMemorySupplierList();
 
     public static void AddSupplier(string name)
     {
@@ -16,7 +16,7 @@ public class SupplierOps
             Name = name
         };
 
-        supplierList.Save(supplier);
+        supplierList.Save(supplier).GetAwaiter().GetResult();
 
         Console.ForegroundColor = ConsoleColor.Green;
         Console.WriteLine($"Supplier '{name}' added successfully.");
@@ -27,7 +27,7 @@ public class SupplierOps
 
     public static void ListSuppliers()
     {
-        var suppliers = supplierList.FilterByName("");
+        var suppliers = supplierList.FilterByName("").GetAwaiter().GetResult();
 
         if (suppliers.Any())
         {

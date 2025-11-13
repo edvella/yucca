@@ -12,6 +12,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Yucca.Inventory\Yucca.Inventory.csproj" />
+    <ProjectReference Include="..\Yucca.Persistence.SQLServer\Yucca.Persistence.SqlServer.csproj" />
     <ProjectReference Include="..\Yucca.ServiceDefaults\Yucca.ServiceDefaults.csproj" />
   </ItemGroup>
 

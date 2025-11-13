@@ -355,3 +355,5 @@ MigrationBackup/
 # Visual Studio Code settings
 .vscode/
 *.min.css
+
+**/appsettings.Development.json

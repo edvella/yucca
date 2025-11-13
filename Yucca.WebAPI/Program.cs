@@ -1,3 +1,6 @@
+using Yucca.Inventory;
+using Yucca.Persistence.SQLServer;
+
 var builder = WebApplication.CreateBuilder(args);
 
 builder.AddServiceDefaults();
@@ -13,6 +16,8 @@ builder.Services.AddCors(options =>
                .AllowAnyHeader();
     });
 });
+
+builder.Services.AddScoped<ISupplierList, SqlSupplierList>();
 
 var app = builder.Build();
 

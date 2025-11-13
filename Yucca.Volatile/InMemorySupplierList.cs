@@ -1,47 +1,47 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using Yucca.Inventory;
 
 namespace Yucca.Volatile;
 
-public class InMemorySupplierList : SupplierList
+public class InMemorySupplierList : ISupplierList
 {
     protected List<Supplier> Suppliers = [];
 
-    public override Supplier GetFirst()
-    {
-        return Suppliers[0];
-    }
-
-    public override string Create(Supplier supplier)
+    public Task<string> Create(Supplier supplier)
     {
         supplier.Id = Guid.NewGuid().ToString();
         Suppliers.Add(supplier);
 
-        return supplier.Id;
+        return Task.FromResult(supplier.Id);
     }
 
-    public override string Update(Supplier supplier)
+    public Task<string> Update(Supplier supplier)
     {
         Suppliers.RemoveAll(s => s.Id == supplier.Id);
         Suppliers.Add(supplier);
 
-        return supplier.Id;
+        return Task.FromResult(supplier.Id);
     }
 
-    public override IEnumerable<Supplier> FilterByName(string text)
+    public Task<IEnumerable<Supplier>> FilterByName(string text)
     {
-        return Suppliers.FindAll(s => 
-            s.Name.Contains(text, StringComparison.OrdinalIgnoreCase));
+        var results = Suppliers.FindAll(s =>
+            s.Name.Contains(text, StringComparison.OrdinalIgnoreCase)).AsEnumerable();
+        return Task.FromResult(results);
     }
 
-    public override void Remove(string id)
+    public Task Remove(string id)
     {
         Suppliers.RemoveAll(_ => _.Id == id);
+        return Task.CompletedTask;
     }
 
-    public override Supplier Get(string id)
+    public Task<Supplier> Get(string id)
     {
-        return Suppliers.Find(s => s.Id == id);
+        var supplier = Suppliers.Find(s => s.Id == id);
+        return Task.FromResult(supplier);
     }
 }
