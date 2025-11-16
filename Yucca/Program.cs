@@ -1,11 +1,24 @@
-﻿using System;
+﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using System;
+using System.Threading.Tasks;
+using Yucca.Inventory;
+using Yucca.Persistence.SQLServer;
 
 namespace Yucca
 {
     class Program
-    {        
-        static void Main(string[] args)
+    {
+        static async Task Main(string[] args)
         {
+            HostApplicationBuilder builder = Host.CreateApplicationBuilder(args);
+
+            builder.Services.AddSingleton<ISupplierList, SqlSupplierList>();
+            builder.Services.AddTransient<SupplierOps>();
+
+            var supplierOps = builder.Services.BuildServiceProvider().GetRequiredService<SupplierOps>();
+
             if (args.Length > 0 && (args[0] == "--help" || args[0] == "-h"))
             {
                 Console.WriteLine("Usage:");
@@ -18,9 +31,9 @@ namespace Yucca
             else if (args.Length > 0 && args[0] == "about")
                 DisplayAboutInfo();
             else if (args.Length == 2 && args[0] == "supplier" && args[1] == "list")
-                SupplierOps.ListSuppliers();
+                await supplierOps.ListSuppliers();
             else if (args.Length >= 3 && args[0] == "supplier" && args[1] == "add")
-                SupplierOps.AddSupplier(args[2]);
+                await supplierOps.AddSupplier(args[2]);
             else
                 Console.WriteLine("No valid command provided. Use '--help' to display information about the application.");
         }
