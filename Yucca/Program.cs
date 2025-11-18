@@ -1,7 +1,9 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿#nullable enable
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Yucca.Inventory;
 using Yucca.Persistence.SQLServer;
@@ -26,6 +28,8 @@ namespace Yucca
                 Console.WriteLine();
                 Console.WriteLine("Commands:");
                 Console.WriteLine("  supplier list   List all suppliers");
+                Console.WriteLine("  supplier add    Add a new supplier (supports named parameters)");
+                Console.WriteLine("                 Example: yucca supplier add --name \"ACME Ltd\" --city \"New York\" --country US --phone \"0123456789\"");
                 Console.WriteLine("  about           Display information about the application");
             }
             else if (args.Length > 0 && args[0] == "about")
@@ -33,7 +37,65 @@ namespace Yucca
             else if (args.Length == 2 && args[0] == "supplier" && args[1] == "list")
                 await supplierOps.ListSuppliers();
             else if (args.Length >= 3 && args[0] == "supplier" && args[1] == "add")
-                await supplierOps.AddSupplier(args[2]);
+            {
+                for (int i = 2; i < args.Length; i++)
+                {
+                    if (args[i] == "--help" || args[i] == "-h")
+                    {
+                        Console.WriteLine("Usage: yucca supplier add [options]");
+                        Console.WriteLine();
+                        Console.WriteLine("Required:");
+                        Console.WriteLine("  --name \"Supplier Name\"        The supplier name (required)");
+                        Console.WriteLine();
+                        Console.WriteLine("Optional fields (named):");
+                        Console.WriteLine("  --address1 \"Address line 1\"");
+                        Console.WriteLine("  --address2 \"Address line 2\"");
+                        Console.WriteLine("  --city \"City\"");
+                        Console.WriteLine("  --state \"State\"");
+                        Console.WriteLine("  --postcode \"Postal/ZIP code\"");
+                        Console.WriteLine("  --country-code <ISO>   Country ISO code (e.g. US)");
+                        Console.WriteLine("  --phone \"Contact phone\"");
+                        Console.WriteLine("  --email \"Email address\"");
+                        Console.WriteLine("  --website \"Website URL\"");
+                        Console.WriteLine("  --tax \"Tax number\"");
+                        Console.WriteLine();
+                        Console.WriteLine("Examples:");
+                        Console.WriteLine("  dotnet run -- supplier add --name \"ACME Ltd\"");
+                        Console.WriteLine("  dotnet run -- supplier add --name \"ACME Ltd\" --city \"New York\" --country-code US --phone \"0123456789\"");
+                        return;
+                    }
+                }
+
+                var named = ParseNamedArgs(args, 2);
+                var name = Get(named, "name");
+                if (string.IsNullOrWhiteSpace(name))
+                {
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine("Supplier name is required. Use --name \"Supplier Name\".");
+                    Console.ResetColor();
+                    return;
+                }
+
+                var supplier = new Supplier
+                {
+                    Name = name!,
+                    AddressLine1 = Get(named, "address1"),
+                    AddressLine2 = Get(named, "address2"),
+                    City = Get(named, "city"),
+                    State = Get(named, "state"),
+                    PostCode = Get(named, "postcode"),
+                    ContactPhone = Get(named, "phone"),
+                    Email = Get(named, "email"),
+                    Website = Get(named, "website"),
+                    TaxNumber = Get(named, "tax")
+                };
+
+                var countryIso = Get(named, "country-code");
+                if (!string.IsNullOrWhiteSpace(countryIso))
+                    supplier.Country = new Country { IsoCode = countryIso };
+
+                await supplierOps.AddSupplier(supplier);
+            }
             else
                 Console.WriteLine("No valid command provided. Use '--help' to display information about the application.");
         }
@@ -55,6 +117,53 @@ namespace Yucca
             Console.ForegroundColor = ConsoleColor.Cyan;
             Console.WriteLine("========================================");
             Console.ResetColor();
+        }
+
+        private static Dictionary<string, string> ParseNamedArgs(string[] args, int startIndex)
+        {
+            var dict = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+
+            for (int i = startIndex; i < args.Length; i++)
+            {
+                var a = args[i];
+                if (a.StartsWith("--") || a.StartsWith("-"))
+                {
+                    var key = a.TrimStart('-');
+                    string value = string.Empty;
+
+                    // support --key=value
+                    var eqIndex = key.IndexOf('=');
+                    if (eqIndex >= 0)
+                    {
+                        value = key[(eqIndex + 1)..];
+                        key = key[..eqIndex];
+                    }
+                    else
+                    {
+                        // support --key value
+                        if (i + 1 < args.Length && !args[i + 1].StartsWith("-"))
+                        {
+                            value = args[i + 1];
+                            i++; // consume value
+                        }
+                    }
+
+                    dict[key] = value;
+                }
+                else
+                {
+                    // treat as stray positional value; map to 'name' if not already present
+                    if (!dict.ContainsKey("name") && !string.IsNullOrWhiteSpace(a))
+                        dict["name"] = a;
+                }
+            }
+
+            return dict;
+        }
+
+        private static string? Get(Dictionary<string, string> dict, string key)
+        {
+            return dict.TryGetValue(key, out var v) ? v : null;
         }
     }
 }

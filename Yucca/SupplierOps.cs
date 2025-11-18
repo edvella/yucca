@@ -14,17 +14,14 @@ public class SupplierOps
         _supplierList = supplierList;
     }
 
-    public async Task AddSupplier(string name)
+    public async Task AddSupplier(Supplier supplier)
     {
-        var supplier = new Supplier
-        {
-            Name = name
-        };
+        if (supplier == null) throw new ArgumentNullException(nameof(supplier));
 
         await _supplierList.Save(supplier);
 
         Console.ForegroundColor = ConsoleColor.Green;
-        Console.WriteLine($"Supplier '{name}' added successfully.");
+        Console.WriteLine($"Supplier '{supplier.Name}' added successfully.");
         Console.ResetColor();
 
         await ListSuppliers();
