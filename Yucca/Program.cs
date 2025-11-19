@@ -30,6 +30,7 @@ namespace Yucca
                 Console.WriteLine("  supplier list   List all suppliers");
                 Console.WriteLine("  supplier add    Add a new supplier (supports named parameters)");
                 Console.WriteLine("                 Example: yucca supplier add --name \"ACME Ltd\" --city \"New York\" --country US --phone \"0123456789\"");
+                Console.WriteLine("  supplier remove Remove a supplier by id");
                 Console.WriteLine("  about           Display information about the application");
             }
             else if (args.Length > 0 && args[0] == "about")
@@ -95,6 +96,33 @@ namespace Yucca
                     supplier.Country = new Country { IsoCode = countryIso };
 
                 await supplierOps.AddSupplier(supplier);
+            }
+            else if (args.Length >= 3 && args[0] == "supplier" && args[1] == "remove")
+            {
+                for (int i = 2; i < args.Length; i++)
+                {
+                    if (args[i] == "--help" || args[i] == "-h")
+                    {
+                        Console.WriteLine("Usage: yucca supplier remove <id>");
+                        Console.WriteLine();
+                        Console.WriteLine("Remove a supplier by its id.");
+                        Console.WriteLine();
+                        Console.WriteLine("Examples:");
+                        Console.WriteLine("  dotnet run -- supplier remove 6f1a3b2c");
+                        return;
+                    }
+                }
+
+                string? id = args[2];
+                if (string.IsNullOrWhiteSpace(id))
+                {
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine("Supplier id is required. Use: yucca supplier remove <id>");
+                    Console.ResetColor();
+                    return;
+                }
+
+                await supplierOps.RemoveSupplier(id);
             }
             else
                 Console.WriteLine("No valid command provided. Use '--help' to display information about the application.");

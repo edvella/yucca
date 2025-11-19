@@ -13,7 +13,6 @@ public class SupplierOps
     {
         _supplierList = supplierList;
     }
-
     public async Task AddSupplier(Supplier supplier)
     {
         if (supplier == null) throw new ArgumentNullException(nameof(supplier));
@@ -22,6 +21,34 @@ public class SupplierOps
 
         Console.ForegroundColor = ConsoleColor.Green;
         Console.WriteLine($"Supplier '{supplier.Name}' added successfully.");
+        Console.ResetColor();
+
+        await ListSuppliers();
+    }
+
+    public async Task RemoveSupplier(string id)
+    {
+        if (string.IsNullOrWhiteSpace(id))
+        {
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine("Supplier id is required to remove a supplier.");
+            Console.ResetColor();
+            return;
+        }
+
+        var existing = await _supplierList.Get(id);
+        if (existing == null)
+        {
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.WriteLine($"No supplier found with id '{id}'.");
+            Console.ResetColor();
+            return;
+        }
+
+        await _supplierList.Remove(id);
+
+        Console.ForegroundColor = ConsoleColor.Green;
+        Console.WriteLine($"Supplier '{existing.Name}' (id: {id}) removed successfully.");
         Console.ResetColor();
 
         await ListSuppliers();
