@@ -357,3 +357,4 @@ MigrationBackup/
 *.min.css
 
 **/appsettings.Development.json
+/Yucca.AppHost/appsettings.Development.json

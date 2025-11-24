@@ -1,6 +1,10 @@
 var builder = DistributedApplication.CreateBuilder(args);
 
-var webapi = builder.AddProject <Projects.Yucca_WebAPI> ("webapi");
+var sqldb = builder.AddConnectionString("YuccaDbConnection");
+
+var webapi = builder.AddProject <Projects.Yucca_WebAPI> ("webapi")
+    .WaitFor(sqldb)
+    .WithReference(sqldb);
 
 builder.AddProject <Projects.Yucca_Web> ("webui")
     .WithExternalHttpEndpoints()
