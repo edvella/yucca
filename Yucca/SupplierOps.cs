@@ -1,5 +1,7 @@
+using Microsoft.Extensions.Hosting;
 using System;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using Yucca.Inventory;
 
@@ -13,6 +15,7 @@ public class SupplierOps
     {
         _supplierList = supplierList;
     }
+
     public async Task AddSupplier(Supplier supplier)
     {
         if (supplier == null) throw new ArgumentNullException(nameof(supplier));
@@ -28,22 +31,7 @@ public class SupplierOps
 
     public async Task RemoveSupplier(string id)
     {
-        if (string.IsNullOrWhiteSpace(id))
-        {
-            Console.ForegroundColor = ConsoleColor.Red;
-            Console.WriteLine("Supplier id is required to remove a supplier.");
-            Console.ResetColor();
-            return;
-        }
-
-        var existing = await _supplierList.Get(id);
-        if (existing == null)
-        {
-            Console.ForegroundColor = ConsoleColor.Yellow;
-            Console.WriteLine($"No supplier found with id '{id}'.");
-            Console.ResetColor();
-            return;
-        }
+        var existing = await GetSupplier(id);
 
         await _supplierList.Remove(id);
 
@@ -97,5 +85,85 @@ public class SupplierOps
         {
             Console.WriteLine("No suppliers found.");
         }
+    }
+
+    public async Task ViewSupplier(string id)
+    {
+        var supplier = await GetSupplier(id);
+        if (supplier == null) return;
+
+        Console.WriteLine($"ID: {supplier.Id}");
+        Console.WriteLine($"Name: {supplier.Name}");
+        Console.WriteLine($"Address Line 1: {supplier.AddressLine1}");
+        Console.WriteLine($"Address Line 2: {supplier.AddressLine2}");
+        Console.WriteLine($"City: {supplier.City}");
+        Console.WriteLine($"State: {supplier.State}");
+        Console.WriteLine($"Post Code: {supplier.PostCode}");
+        Console.WriteLine($"Country: {supplier.Country}");
+        Console.WriteLine($"Contact Phone: {supplier.ContactPhone}");
+        Console.WriteLine($"Email: {supplier.Email}");
+        Console.WriteLine($"Website: {supplier.Website}");
+        Console.WriteLine($"Tax Number: {supplier.TaxNumber}");
+    }
+
+    private async Task<Supplier> GetSupplier(string id)
+    {
+        if (string.IsNullOrWhiteSpace(id))
+        {
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine("Supplier id is required.");
+            Console.ResetColor();
+            return null;
+        }
+
+        var supplier = await _supplierList.Get(id);
+        if (supplier == null)
+        {
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.WriteLine($"No supplier found with id '{id}'.");
+            Console.ResetColor();
+            return null;
+        }
+
+        return supplier;
+    }
+
+    internal async Task UpdateSupplier(
+        string id,
+        string name,
+        string addressLine1,
+        string addressLine2,
+        string city,
+        string state,
+        string postCode,
+        string countrycode,
+        string contactPhone,
+        string email,
+        string website,
+        string taxNumber
+        )
+    {
+        var existing = await GetSupplier(id);
+        if (existing == null) return;
+
+        if (!string.IsNullOrEmpty(name)) existing.Name = name;
+        if (!string.IsNullOrEmpty(addressLine1)) existing.AddressLine1 = addressLine1;
+        if (!string.IsNullOrEmpty(addressLine2)) existing.AddressLine2 = addressLine2;
+        if (!string.IsNullOrEmpty(city)) existing.City = city;
+        if (!string.IsNullOrEmpty(state)) existing.State = state;
+        if (!string.IsNullOrEmpty(postCode)) existing.PostCode = postCode;
+        if (!string.IsNullOrEmpty(countrycode)) existing.Country = new Country { IsoCode = countrycode };
+        if (!string.IsNullOrEmpty(contactPhone)) existing.ContactPhone = contactPhone;
+        if (!string.IsNullOrEmpty(email)) existing.Email = email;
+        if (!string.IsNullOrEmpty(website)) existing.Website = website;
+        if (!string.IsNullOrEmpty(taxNumber)) existing.TaxNumber = taxNumber;
+
+        await _supplierList.Save(existing);
+
+        Console.ForegroundColor = ConsoleColor.Green;
+        Console.WriteLine($"Supplier '{existing.Name}' updated successfully.");
+        Console.ResetColor();
+
+        await ListSuppliers();
     }
 }

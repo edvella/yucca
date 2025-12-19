@@ -28,8 +28,10 @@ namespace Yucca
                 Console.WriteLine();
                 Console.WriteLine("Commands:");
                 Console.WriteLine("  supplier list   List all suppliers");
+                Console.WriteLine("  supplier view --id <id> View full supplier details");
                 Console.WriteLine("  supplier add    Add a new supplier (supports named parameters)");
                 Console.WriteLine("                 Example: yucca supplier add --name \"ACME Ltd\" --city \"New York\" --country US --phone \"0123456789\"");
+                Console.WriteLine("  supplier update Update supplier details using same parameters as add command. Requires ID parameter.");
                 Console.WriteLine("  supplier remove Remove a supplier by id");
                 Console.WriteLine("  about           Display information about the application");
             }
@@ -37,6 +39,21 @@ namespace Yucca
                 DisplayAboutInfo();
             else if (args.Length == 2 && args[0] == "supplier" && args[1] == "list")
                 await supplierOps.ListSuppliers();
+            else if (args.Length >= 3 && args[0] == "supplier" && args[1] == "view")
+            {
+                var named = ParseNamedArgs(args, 2);
+                var id = Get(named, "id");
+
+                if (string.IsNullOrWhiteSpace(id))
+                {
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine("Supplier ID is required. Use yucca supplier view --id <id>.");
+                    Console.ResetColor();
+                    return;
+                }
+
+                await supplierOps.ViewSupplier(id);
+            }
             else if (args.Length >= 3 && args[0] == "supplier" && args[1] == "add")
             {
                 for (int i = 2; i < args.Length; i++)
@@ -96,6 +113,58 @@ namespace Yucca
                     supplier.Country = new Country { IsoCode = countryIso };
 
                 await supplierOps.AddSupplier(supplier);
+            }
+            else if (args.Length >= 3 && args[0] == "supplier" && args[1] == "update")
+            {
+                for (int i = 2; i < args.Length; i++)
+                {
+                    if (args[i] == "--help" || args[i] == "-h")
+                    {
+                        Console.WriteLine("Usage: yucca supplier update [options]");
+                        Console.WriteLine();
+                        Console.WriteLine("Required:");
+                        Console.WriteLine("  --id \"Supplier ID\"        The ID of the existing supplier");
+                        Console.WriteLine();
+                        Console.WriteLine("Optional fields (named):");
+                        Console.WriteLine("  --name \"Supplier Name\"        The supplier name");
+                        Console.WriteLine("  --address1 \"Address line 1\"");
+                        Console.WriteLine("  --address2 \"Address line 2\"");
+                        Console.WriteLine("  --city \"City\"");
+                        Console.WriteLine("  --state \"State\"");
+                        Console.WriteLine("  --postcode \"Postal/ZIP code\"");
+                        Console.WriteLine("  --country-code <ISO>   Country ISO code (e.g. US)");
+                        Console.WriteLine("  --phone \"Contact phone\"");
+                        Console.WriteLine("  --email \"Email address\"");
+                        Console.WriteLine("  --website \"Website URL\"");
+                        Console.WriteLine("  --tax \"Tax number\"");
+                        Console.WriteLine();                        
+                        return;
+                    }
+                }
+
+                var named = ParseNamedArgs(args, 2);
+                var id = Get(named, "id");
+                if (string.IsNullOrWhiteSpace(id))
+                {
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine("Supplier id is required. Use --id \"Supplier ID\".");
+                    Console.ResetColor();
+                    return;
+                }
+
+                await supplierOps.UpdateSupplier(
+                    id!,
+                    Get(named, "name"),
+                    Get(named, "address1"),
+                    Get(named, "address2"),
+                    Get(named, "city"),
+                    Get(named, "state"),
+                    Get(named, "postcode"),
+                    Get(named, "country-code"),
+                    Get(named, "phone"),
+                    Get(named, "email"),
+                    Get(named, "website"),
+                    Get(named, "tax"));
             }
             else if (args.Length >= 3 && args[0] == "supplier" && args[1] == "remove")
             {
