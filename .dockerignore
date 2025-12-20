@@ -1,0 +1,11 @@
+bin/
+obj/
+**/*.user
+**/*.vspscc
+.vscode/
+.git/
+*.md
+*.suo
+*.nupkg
+.nuget/
+**/.DS_Store
