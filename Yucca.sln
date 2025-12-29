@@ -31,6 +31,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Backend", "Backend", "{8CB0
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Yucca.Persistence.SqlServer", "Yucca.Persistence.SQLServer\Yucca.Persistence.SqlServer.csproj", "{8504257A-BAF2-4FC6-A7F9-3FD7149EBADA}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Yucca.Output", "Yucca.Output\Yucca.Output.csproj", "{C5F3220E-05BB-4D23-9609-A157150C1CA6}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -149,6 +151,18 @@ Global
 		{8504257A-BAF2-4FC6-A7F9-3FD7149EBADA}.Release|x64.Build.0 = Release|Any CPU
 		{8504257A-BAF2-4FC6-A7F9-3FD7149EBADA}.Release|x86.ActiveCfg = Release|Any CPU
 		{8504257A-BAF2-4FC6-A7F9-3FD7149EBADA}.Release|x86.Build.0 = Release|Any CPU
+		{C5F3220E-05BB-4D23-9609-A157150C1CA6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C5F3220E-05BB-4D23-9609-A157150C1CA6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C5F3220E-05BB-4D23-9609-A157150C1CA6}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{C5F3220E-05BB-4D23-9609-A157150C1CA6}.Debug|x64.Build.0 = Debug|Any CPU
+		{C5F3220E-05BB-4D23-9609-A157150C1CA6}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{C5F3220E-05BB-4D23-9609-A157150C1CA6}.Debug|x86.Build.0 = Debug|Any CPU
+		{C5F3220E-05BB-4D23-9609-A157150C1CA6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C5F3220E-05BB-4D23-9609-A157150C1CA6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C5F3220E-05BB-4D23-9609-A157150C1CA6}.Release|x64.ActiveCfg = Release|Any CPU
+		{C5F3220E-05BB-4D23-9609-A157150C1CA6}.Release|x64.Build.0 = Release|Any CPU
+		{C5F3220E-05BB-4D23-9609-A157150C1CA6}.Release|x86.ActiveCfg = Release|Any CPU
+		{C5F3220E-05BB-4D23-9609-A157150C1CA6}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -162,6 +176,7 @@ Global
 		{CCD54E3B-9058-45DF-9F44-9B82D670193C} = {D172B516-2951-49DF-9448-ED8AF6AD7CA5}
 		{7739878A-248B-4F71-864F-91C65BAC2508} = {D172B516-2951-49DF-9448-ED8AF6AD7CA5}
 		{8504257A-BAF2-4FC6-A7F9-3FD7149EBADA} = {C306F9F1-09DC-415B-B34D-125713CB4048}
+		{C5F3220E-05BB-4D23-9609-A157150C1CA6} = {D172B516-2951-49DF-9448-ED8AF6AD7CA5}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {73A51AE9-62D0-4211-8447-CE398C7CB466}
