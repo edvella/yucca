@@ -33,6 +33,7 @@ namespace Yucca
                 Console.WriteLine("                 Example: yucca supplier add --name \"ACME Ltd\" --city \"New York\" --country US --phone \"0123456789\"");
                 Console.WriteLine("  supplier update Update supplier details using same parameters as add command. Requires ID parameter.");
                 Console.WriteLine("  supplier remove Remove a supplier by id");
+                Console.WriteLine("  supplier export --file <path>   Export suppliers as CSV to specified file path");
                 Console.WriteLine("  about           Display information about the application");
             }
             else if (args.Length > 0 && args[0] == "about")
@@ -192,6 +193,21 @@ namespace Yucca
                 }
 
                 await supplierOps.RemoveSupplier(id);
+            }
+            else if (args.Length >= 2 && args[0] == "supplier" && args[1] == "export")
+            {
+                var named = ParseNamedArgs(args, 2);
+                var filePath = Get(named, "file");
+
+                if (string.IsNullOrWhiteSpace(filePath))
+                {
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine("File path is required. Use: yucca supplier export --file <path>");
+                    Console.ResetColor();
+                    return;
+                }
+
+                await supplierOps.ExportSuppliersAsCsv(filePath);
             }
             else
                 Console.WriteLine("No valid command provided. Use '--help' to display information about the application.");

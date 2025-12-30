@@ -1,9 +1,11 @@
 using Microsoft.Extensions.Hosting;
 using System;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using Yucca.Inventory;
+using Yucca.Output;
 
 namespace Yucca;
 
@@ -165,5 +167,42 @@ public class SupplierOps
         Console.ResetColor();
 
         await ListSuppliers();
+    }
+
+    public async Task ExportSuppliersAsCsv(string filePath)
+    {
+        if (string.IsNullOrWhiteSpace(filePath))
+        {
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine("File path is required for export.");
+            Console.ResetColor();
+            return;
+        }
+
+        var suppliers = await _supplierList.FilterByName("");
+
+        if (!suppliers.Any())
+        {
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.WriteLine("No suppliers found to export.");
+            Console.ResetColor();
+            return;
+        }
+
+        try
+        {
+            var csvContent = CsvExporter.GenerateSupplierCsv(suppliers);
+            await File.WriteAllTextAsync(filePath, csvContent);
+
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine($"Successfully exported {suppliers.Count()} supplier(s) to '{filePath}'.");
+            Console.ResetColor();
+        }
+        catch (Exception ex)
+        {
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine($"Error exporting suppliers: {ex.Message}");
+            Console.ResetColor();
+        }
     }
 }

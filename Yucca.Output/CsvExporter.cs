@@ -4,7 +4,7 @@ namespace Yucca.Output
 {
     public class CsvExporter
     {
-        public static string GenerateSupplierCsv(List<Supplier> suppliers)
+        public static string GenerateSupplierCsv(IEnumerable<Supplier> suppliers)
         {
             var csvLines = new List<string>
                 {

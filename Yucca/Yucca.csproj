@@ -17,6 +17,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Yucca.Inventory\Yucca.Inventory.csproj" />
+    <ProjectReference Include="..\Yucca.Output\Yucca.Output.csproj" />
     <ProjectReference Include="..\Yucca.Volatile\Yucca.Volatile.csproj" />
     <ProjectReference Include="..\Yucca.Persistence.SQLServer\Yucca.Persistence.SqlServer.csproj" />
   </ItemGroup>
