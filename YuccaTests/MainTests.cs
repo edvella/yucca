@@ -1,6 +1,6 @@
 using FluentAssertions;
 using Xunit;
-using Yucca;
+using Yucca.Operations.App;
 
 namespace YuccaTests;
 

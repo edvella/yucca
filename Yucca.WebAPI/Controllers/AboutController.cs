@@ -1,5 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
-using Yucca;
+using Yucca.Operations.App;
 
 namespace Yucca.WebAPI.Controllers
 {
