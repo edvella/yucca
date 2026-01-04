@@ -24,15 +24,17 @@ namespace Yucca
 
             builder.Services.AddKeyedTransient<IYuccaOperation, Help>(Help.RegisterCommand());
             builder.Services.AddKeyedTransient<IYuccaOperation, About>(About.RegisterCommand());
+            builder.Services.AddKeyedTransient<IYuccaOperation, Operations.Supplier.List>(Operations.Supplier.List.RegisterCommand());
 
             if (args.Length > 0)
             {
-                var operation = builder.Services.BuildServiceProvider().GetKeyedService<IYuccaOperation>(args[0]);
+                var command = args[0];
+                if (args.Length >= 2 && !args[1].StartsWith('-')) command += " " + args[1];
+
+                var operation = builder.Services.BuildServiceProvider().GetKeyedService<IYuccaOperation>(command);
 
                 if (operation != null)
                     await operation.Execute(args);
-                else if (args.Length == 2 && args[0] == "supplier" && args[1] == "list")
-                    await supplierOps.ListSuppliers();
                 else if (args.Length >= 3 && args[0] == "supplier" && args[1] == "view")
                 {
                     var named = ParseNamedArgs(args, 2);
@@ -202,9 +204,11 @@ namespace Yucca
 
                     await supplierOps.ExportSuppliersAsCsv(filePath);
                 }
+                else
+                    Console.WriteLine("No valid command provided. Use 'yucca help' to display information about the application.");
             }
             else
-                Console.WriteLine("No valid command provided. Use 'help' to display information about the application.");
+                Console.WriteLine("No valid command provided. Use 'yucca help' to display information about the application.");
         }
 
         private static Dictionary<string, string> ParseNamedArgs(string[] args, int startIndex)
