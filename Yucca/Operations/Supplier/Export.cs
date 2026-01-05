@@ -3,25 +3,25 @@ using System.Threading.Tasks;
 
 namespace Yucca.Operations.Supplier;
 
-public class View(SupplierOps supplierOps) : IYuccaOperation
+internal class Export(SupplierOps supplierOps) : IYuccaOperation
 {
     private readonly SupplierOps _supplierOps = supplierOps;
 
-    public static string RegisterCommand() => "supplier view";
+    public static string RegisterCommand() => "supplier export";
 
     public async Task Execute(string[] parameters)
     {
         var named = CommandLine.ParseNamedArgs(parameters, 2);
-        var id = CommandLine.Get(named, "id");
+        var filePath = CommandLine.Get(named, "file");
 
-        if (string.IsNullOrWhiteSpace(id))
+        if (string.IsNullOrWhiteSpace(filePath))
         {
             Console.ForegroundColor = ConsoleColor.Red;
-            Console.WriteLine("Supplier ID is required. Use yucca supplier view --id <id>.");
+            Console.WriteLine("File path is required. Use: yucca supplier export --file <path>");
             Console.ResetColor();
             return;
         }
 
-        await _supplierOps.ViewSupplier(id);
+        await _supplierOps.ExportSuppliersAsCsv(filePath);
     }
 }

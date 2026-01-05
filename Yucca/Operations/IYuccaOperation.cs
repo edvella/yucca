@@ -1,9 +1,8 @@
 ﻿using System.Threading.Tasks;
 
-namespace Yucca.Operations
+namespace Yucca.Operations;
+
+public interface IYuccaOperation
 {
-    public interface IYuccaOperation
-    {
-        Task Execute(string[] parameters);
-    }
+    Task Execute(string[] parameters);
 }
