@@ -115,3 +115,7 @@ GET /api/about
 ```
 
 This will return details such as the application title, description, and version.
+
+## Using Yucca
+
+For instructions on how to use Yucca via the Command Line, please refer to the [User Guide](doc/readmeCli.md).

@@ -1,6 +1,8 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text.Json;
 using System.Threading.Tasks;
 using Yucca.Inventory;
 using Yucca.Output;
@@ -26,7 +28,7 @@ public class SupplierOps
         Console.WriteLine($"Supplier '{supplier.Name}' added successfully.");
         Console.ResetColor();
 
-        await ListSuppliers();
+        await ListSuppliers(OutputFormat.Table);
     }
 
     public async Task RemoveSupplier(string id)
@@ -39,52 +41,81 @@ public class SupplierOps
         Console.WriteLine($"Supplier '{existing.Name}' (id: {id}) removed successfully.");
         Console.ResetColor();
 
-        await ListSuppliers();
+        await ListSuppliers(OutputFormat.Table);
     }
 
-    public async Task ListSuppliers()
+    public async Task ListSuppliers(OutputFormat format = OutputFormat.Table)
     {
         var suppliers = await _supplierList.FilterByName("");
 
-        if (suppliers.Any())
-        {
-            Console.ForegroundColor = ConsoleColor.Yellow;
-            Console.WriteLine("Suppliers:");
-            Console.ResetColor();
-
-            const int idWidth = 6;
-            const int nameWidth = 30;
-            const int cityWidth = 20;
-            const int countryWidth = 13;
-            const int phoneWidth = 20;
-            const int websiteWidth = 30;
-
-            string topBorder = $"┌{new string('─', idWidth)}┬{new string('─', nameWidth)}┬{new string('─', cityWidth)}┬{new string('─', countryWidth)}┬{new string('─', phoneWidth)}┬{new string('─', websiteWidth)}┐";
-            string midBorder = $"├{new string('─', idWidth)}┼{new string('─', nameWidth)}┼{new string('─', cityWidth)}┼{new string('─', countryWidth)}┼{new string('─', phoneWidth)}┼{new string('─', websiteWidth)}┤";
-            string bottomBorder = $"└{new string('─', idWidth)}┴{new string('─', nameWidth)}┴{new string('─', cityWidth)}┴{new string('─', countryWidth)}┴{new string('─', phoneWidth)}┴{new string('─', websiteWidth)}┘";
-
-            Console.WriteLine(topBorder);
-            Console.WriteLine($"│ {"ID".PadRight(idWidth - 1)}│ {"Name".PadRight(nameWidth - 1)}│ {"City".PadRight(cityWidth - 1)}│ {"Country Code".PadRight(countryWidth - 1)}│ {"Phone".PadRight(phoneWidth - 1)}│ {"Website".PadRight(websiteWidth - 1)}│");
-            Console.WriteLine(midBorder);
-
-            foreach (var supplier in suppliers)
-            {
-                string idStr = supplier.Id?.ToString() ?? "";
-                string nameStr = supplier.Name ?? "";
-                string cityStr = supplier.City ?? "";
-                string countryStr = supplier.Country?.IsoCode ?? "";
-                string phoneStr = supplier.ContactPhone ?? "";
-                string websiteStr = supplier.Website ?? "";
-
-                Console.WriteLine($"│ {idStr.PadRight(idWidth - 1)}│ {nameStr.PadRight(nameWidth - 1)}│ {cityStr.PadRight(cityWidth - 1)}│ {countryStr.PadRight(countryWidth - 1)}│ {phoneStr.PadRight(phoneWidth - 1)}│ {websiteStr.PadRight(websiteWidth - 1)}│");
-            }
-
-            Console.WriteLine(bottomBorder);
-        }
-        else
+        if (!suppliers.Any())
         {
             Console.WriteLine("No suppliers found.");
+            return;
         }
+
+        switch (format)
+        {
+            case OutputFormat.Json:
+                PrintAsJson(suppliers);
+                break;
+            case OutputFormat.Csv:
+                PrintAsCsv(suppliers);
+                break;
+            case OutputFormat.Table:
+            default:
+                PrintAsTable(suppliers);
+                break;
+        }
+    }
+
+    private static void PrintAsTable(IEnumerable<Supplier> suppliers)
+    {
+        Console.ForegroundColor = ConsoleColor.Yellow;
+        Console.WriteLine("Suppliers:");
+        Console.ResetColor();
+
+        const int idWidth = 6;
+        const int nameWidth = 30;
+        const int cityWidth = 20;
+        const int countryWidth = 13;
+        const int phoneWidth = 20;
+        const int websiteWidth = 30;
+
+        string topBorder = $"┌{new string('─', idWidth)}┬{new string('─', nameWidth)}┬{new string('─', cityWidth)}┬{new string('─', countryWidth)}┬{new string('─', phoneWidth)}┬{new string('─', websiteWidth)}┐";
+        string midBorder = $"├{new string('─', idWidth)}┼{new string('─', nameWidth)}┼{new string('─', cityWidth)}┼{new string('─', countryWidth)}┼{new string('─', phoneWidth)}┼{new string('─', websiteWidth)}┤";
+        string bottomBorder = $"└{new string('─', idWidth)}┴{new string('─', nameWidth)}┴{new string('─', cityWidth)}┴{new string('─', countryWidth)}┴{new string('─', phoneWidth)}┴{new string('─', websiteWidth)}┘";
+
+        Console.WriteLine(topBorder);
+        Console.WriteLine($"│ {"ID".PadRight(idWidth - 1)}│ {"Name".PadRight(nameWidth - 1)}│ {"City".PadRight(cityWidth - 1)}│ {"Country Code".PadRight(countryWidth - 1)}│ {"Phone".PadRight(phoneWidth - 1)}│ {"Website".PadRight(websiteWidth - 1)}│");
+        Console.WriteLine(midBorder);
+
+        foreach (var supplier in suppliers)
+        {
+            string idStr = supplier.Id?.ToString() ?? "";
+            string nameStr = supplier.Name ?? "";
+            string cityStr = supplier.City ?? "";
+            string countryStr = supplier.Country?.IsoCode ?? "";
+            string phoneStr = supplier.ContactPhone ?? "";
+            string websiteStr = supplier.Website ?? "";
+
+            Console.WriteLine($"│ {idStr.PadRight(idWidth - 1)}│ {nameStr.PadRight(nameWidth - 1)}│ {cityStr.PadRight(cityWidth - 1)}│ {countryStr.PadRight(countryWidth - 1)}│ {phoneStr.PadRight(phoneWidth - 1)}│ {websiteStr.PadRight(websiteWidth - 1)}│");
+        }
+
+        Console.WriteLine(bottomBorder);
+    }
+
+    private static void PrintAsJson(IEnumerable<Supplier> suppliers)
+    {
+        var options = new JsonSerializerOptions { WriteIndented = true };
+        string json = JsonSerializer.Serialize(suppliers, options);
+        Console.WriteLine(json);
+    }
+
+    private static void PrintAsCsv(IEnumerable<Supplier> suppliers)
+    {
+        string csv = CsvExporter.GenerateSupplierCsv(suppliers);
+        Console.WriteLine(csv);
     }
 
     public async Task ViewSupplier(string id)
@@ -119,8 +150,8 @@ public class SupplierOps
         var supplier = await _supplierList.Get(id);
         if (supplier == null)
         {
-            Console.ForegroundColor = ConsoleColor.Yellow;
-            Console.WriteLine($"No supplier found with id '{id}'.");
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine($"Supplier with id '{id}' not found.");
             Console.ResetColor();
             return null;
         }

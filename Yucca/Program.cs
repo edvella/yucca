@@ -1,5 +1,4 @@
-﻿#nullable enable
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System;
 using System.Threading.Tasks;
@@ -20,16 +19,7 @@ namespace Yucca
             builder.Services.AddSingleton<ISupplierList, SqlSupplierList>();
             builder.Services.AddTransient<SupplierOps>();
 
-            var supplierOps = builder.Services.BuildServiceProvider().GetRequiredService<SupplierOps>();
-
-            builder.Services.AddKeyedTransient<IYuccaOperation, Help>(Help.RegisterCommand());
-            builder.Services.AddKeyedTransient<IYuccaOperation, About>(About.RegisterCommand());
-            builder.Services.AddKeyedTransient<IYuccaOperation, List>(List.RegisterCommand());
-            builder.Services.AddKeyedTransient<IYuccaOperation, View>(View.RegisterCommand());
-            builder.Services.AddKeyedTransient<IYuccaOperation, Add>(Add.RegisterCommand());
-            builder.Services.AddKeyedTransient<IYuccaOperation, Update>(Update.RegisterCommand());
-            builder.Services.AddKeyedTransient<IYuccaOperation, Remove>(Remove.RegisterCommand());
-            builder.Services.AddKeyedTransient<IYuccaOperation, Export>(Export.RegisterCommand());
+            RegisterCommands(builder);
 
             if (args.Length > 0)
             {
@@ -42,11 +32,23 @@ namespace Yucca
                 {
                     await operation.Execute(args);
                     Environment.Exit(0);
-                }                
+                }
             }
-            
+
             Console.WriteLine("No valid command provided. Use 'yucca help' to display information about the application.");
             Environment.Exit(1);
+        }
+
+        private static void RegisterCommands(HostApplicationBuilder builder)
+        {
+            builder.Services.AddKeyedTransient<IYuccaOperation, Help>(Help.RegisterCommand());
+            builder.Services.AddKeyedTransient<IYuccaOperation, About>(About.RegisterCommand());
+            builder.Services.AddKeyedTransient<IYuccaOperation, List>(List.RegisterCommand());
+            builder.Services.AddKeyedTransient<IYuccaOperation, View>(View.RegisterCommand());
+            builder.Services.AddKeyedTransient<IYuccaOperation, Add>(Add.RegisterCommand());
+            builder.Services.AddKeyedTransient<IYuccaOperation, Update>(Update.RegisterCommand());
+            builder.Services.AddKeyedTransient<IYuccaOperation, Remove>(Remove.RegisterCommand());
+            builder.Services.AddKeyedTransient<IYuccaOperation, Export>(Export.RegisterCommand());
         }
     }
 }
