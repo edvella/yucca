@@ -20,7 +20,7 @@ This will display a list of available commands and options for using Yucca from 
 ### Examples of Common Commands
 - To display information about the application:
 ```bash
-yucca --about
+yucca about
 ```
 
 - To list all suppliers:
