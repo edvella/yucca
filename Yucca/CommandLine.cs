@@ -19,38 +19,40 @@ internal static class CommandLine
         for (int i = startIndex; i < args.Length; i++)
         {
             var a = args[i];
-            if (a.StartsWith("--") || a.StartsWith("-"))
+            if (a.StartsWith("--") || a.StartsWith('-'))
             {
                 var key = a.TrimStart('-');
-                string value = string.Empty;
 
-                // support --key=value
-                var eqIndex = key.IndexOf('=');
-                if (eqIndex >= 0)
+                if (i + 1 < args.Length && !args[i + 1].StartsWith('-'))
                 {
-                    value = key[(eqIndex + 1)..];
-                    key = key[..eqIndex];
+                    dict[key] = args[i + 1];
+                    i++;
                 }
-                else
-                {
-                    // support --key value
-                    if (i + 1 < args.Length && !args[i + 1].StartsWith("-"))
-                    {
-                        value = args[i + 1];
-                        i++; // consume value
-                    }
-                }
-
-                dict[key] = value;
-            }
-            else
-            {
-                // treat as stray positional value; map to 'name' if not already present
-                if (!dict.ContainsKey("name") && !string.IsNullOrWhiteSpace(a))
-                    dict["name"] = a;
             }
         }
 
         return dict;
+    }
+
+    public static void ShowSuccess(string message)
+    {
+        ShowConsoleMessage(ConsoleColor.Green, message);
+    }
+
+    public static void ShowError(string message)
+    {
+        ShowConsoleMessage(ConsoleColor.Red, message);
+    }
+
+    public static void ShowWarning(string message)
+    {
+        ShowConsoleMessage(ConsoleColor.Yellow, message);
+    }
+
+    private static void ShowConsoleMessage(ConsoleColor color, string message)
+    {
+        Console.ForegroundColor = color;
+        Console.WriteLine(message);
+        Console.ResetColor();
     }
 }

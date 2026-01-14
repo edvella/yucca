@@ -8,47 +8,58 @@ using Yucca.Operations.App;
 using Yucca.Operations.Supplier;
 using Yucca.Persistence.SQLServer;
 
-namespace Yucca
+namespace Yucca;
+
+public class Program
 {
-    class Program
+    private static HostApplicationBuilder builder;
+
+    public static async Task Main(string[] args)
     {
-        static async Task Main(string[] args)
+        RegisterServices();
+
+        RegisterCommands(builder);
+
+        await RunCommand(args);
+
+        Console.WriteLine("No valid command provided. Use 'yucca help' to display information about the application.");
+        Environment.Exit(1);
+    }
+
+    private static void RegisterServices()
+    {
+        builder = Host.CreateApplicationBuilder();
+
+        builder.Services.AddSingleton<ISupplierList, SqlSupplierList>();
+        builder.Services.AddTransient<SupplierOps>();
+    }
+
+    private static void RegisterCommands(HostApplicationBuilder builder)
+    {
+        builder.Services.AddKeyedTransient<IYuccaOperation, Help>(Help.RegisterCommand());
+        builder.Services.AddKeyedTransient<IYuccaOperation, About>(About.RegisterCommand());
+        builder.Services.AddKeyedTransient<IYuccaOperation, List>(List.RegisterCommand());
+        builder.Services.AddKeyedTransient<IYuccaOperation, View>(View.RegisterCommand());
+        builder.Services.AddKeyedTransient<IYuccaOperation, Add>(Add.RegisterCommand());
+        builder.Services.AddKeyedTransient<IYuccaOperation, Update>(Update.RegisterCommand());
+        builder.Services.AddKeyedTransient<IYuccaOperation, Remove>(Remove.RegisterCommand());
+        builder.Services.AddKeyedTransient<IYuccaOperation, Export>(Export.RegisterCommand());
+    }
+
+    private static async Task RunCommand(string[] args)
+    {
+        if (args.Length > 0)
         {
-            HostApplicationBuilder builder = Host.CreateApplicationBuilder(args);
+            var command = args[0];
+            if (args.Length >= 2 && !args[1].StartsWith('-')) command += " " + args[1];
 
-            builder.Services.AddSingleton<ISupplierList, SqlSupplierList>();
-            builder.Services.AddTransient<SupplierOps>();
+            var operation = builder.Services.BuildServiceProvider().GetKeyedService<IYuccaOperation>(command);
 
-            RegisterCommands(builder);
-
-            if (args.Length > 0)
+            if (operation != null)
             {
-                var command = args[0];
-                if (args.Length >= 2 && !args[1].StartsWith('-')) command += " " + args[1];
-
-                var operation = builder.Services.BuildServiceProvider().GetKeyedService<IYuccaOperation>(command);
-
-                if (operation != null)
-                {
-                    await operation.Execute(args);
-                    Environment.Exit(0);
-                }
+                await operation.Execute(args);
+                Environment.Exit(0);
             }
-
-            Console.WriteLine("No valid command provided. Use 'yucca help' to display information about the application.");
-            Environment.Exit(1);
-        }
-
-        private static void RegisterCommands(HostApplicationBuilder builder)
-        {
-            builder.Services.AddKeyedTransient<IYuccaOperation, Help>(Help.RegisterCommand());
-            builder.Services.AddKeyedTransient<IYuccaOperation, About>(About.RegisterCommand());
-            builder.Services.AddKeyedTransient<IYuccaOperation, List>(List.RegisterCommand());
-            builder.Services.AddKeyedTransient<IYuccaOperation, View>(View.RegisterCommand());
-            builder.Services.AddKeyedTransient<IYuccaOperation, Add>(Add.RegisterCommand());
-            builder.Services.AddKeyedTransient<IYuccaOperation, Update>(Update.RegisterCommand());
-            builder.Services.AddKeyedTransient<IYuccaOperation, Remove>(Remove.RegisterCommand());
-            builder.Services.AddKeyedTransient<IYuccaOperation, Export>(Export.RegisterCommand());
         }
     }
 }

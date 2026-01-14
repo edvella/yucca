@@ -9,24 +9,17 @@ using Yucca.Output;
 
 namespace Yucca;
 
-public class SupplierOps
+public class SupplierOps(ISupplierList supplierList)
 {
-    private readonly ISupplierList _supplierList;
-
-    public SupplierOps(ISupplierList supplierList)
-    {
-        _supplierList = supplierList;
-    }
+    private readonly ISupplierList _supplierList = supplierList;
 
     public async Task AddSupplier(Supplier supplier)
     {
-        if (supplier == null) throw new ArgumentNullException(nameof(supplier));
+        ArgumentNullException.ThrowIfNull(supplier);
 
         await _supplierList.Save(supplier);
 
-        Console.ForegroundColor = ConsoleColor.Green;
-        Console.WriteLine($"Supplier '{supplier.Name}' added successfully.");
-        Console.ResetColor();
+        CommandLine.ShowSuccess($"Supplier '{supplier.Name}' added successfully.");
 
         await ListSuppliers(OutputFormat.Table);
     }
@@ -37,9 +30,7 @@ public class SupplierOps
 
         await _supplierList.Remove(id);
 
-        Console.ForegroundColor = ConsoleColor.Green;
-        Console.WriteLine($"Supplier '{existing.Name}' (id: {id}) removed successfully.");
-        Console.ResetColor();
+        CommandLine.ShowSuccess($"Supplier '{existing.Name}' (id: {id}) removed successfully.");
 
         await ListSuppliers(OutputFormat.Table);
     }
@@ -50,7 +41,7 @@ public class SupplierOps
 
         if (!suppliers.Any())
         {
-            Console.WriteLine("No suppliers found.");
+            CommandLine.ShowWarning("No suppliers found.");
             return;
         }
 
@@ -141,18 +132,14 @@ public class SupplierOps
     {
         if (string.IsNullOrWhiteSpace(id))
         {
-            Console.ForegroundColor = ConsoleColor.Red;
-            Console.WriteLine("Supplier id is required.");
-            Console.ResetColor();
+            CommandLine.ShowError("Supplier id is required.");
             return null;
         }
 
         var supplier = await _supplierList.Get(id);
         if (supplier == null)
         {
-            Console.ForegroundColor = ConsoleColor.Red;
-            Console.WriteLine($"Supplier with id '{id}' not found.");
-            Console.ResetColor();
+            CommandLine.ShowError($"Supplier with id '{id}' not found.");
             return null;
         }
 
@@ -191,9 +178,7 @@ public class SupplierOps
 
         await _supplierList.Save(existing);
 
-        Console.ForegroundColor = ConsoleColor.Green;
-        Console.WriteLine($"Supplier '{existing.Name}' updated successfully.");
-        Console.ResetColor();
+        CommandLine.ShowSuccess($"Supplier '{existing.Name}' updated successfully.");
 
         await ListSuppliers();
     }
@@ -202,9 +187,7 @@ public class SupplierOps
     {
         if (string.IsNullOrWhiteSpace(filePath))
         {
-            Console.ForegroundColor = ConsoleColor.Red;
-            Console.WriteLine("File path is required for export.");
-            Console.ResetColor();
+            CommandLine.ShowError("File path is required for export.");
             return;
         }
 
@@ -212,9 +195,7 @@ public class SupplierOps
 
         if (!suppliers.Any())
         {
-            Console.ForegroundColor = ConsoleColor.Yellow;
-            Console.WriteLine("No suppliers found to export.");
-            Console.ResetColor();
+            CommandLine.ShowWarning("No suppliers found to export.");
             return;
         }
 
@@ -223,15 +204,11 @@ public class SupplierOps
             var csvContent = CsvExporter.GenerateSupplierCsv(suppliers);
             await File.WriteAllTextAsync(filePath, csvContent);
 
-            Console.ForegroundColor = ConsoleColor.Green;
-            Console.WriteLine($"Successfully exported {suppliers.Count()} supplier(s) to '{filePath}'.");
-            Console.ResetColor();
+            CommandLine.ShowSuccess($"Successfully exported {suppliers.Count()} supplier(s) to '{filePath}'.");
         }
         catch (Exception ex)
         {
-            Console.ForegroundColor = ConsoleColor.Red;
-            Console.WriteLine($"Error exporting suppliers: {ex.Message}");
-            Console.ResetColor();
+            CommandLine.ShowError($"Error exporting suppliers: {ex.Message}");
         }
     }
 }

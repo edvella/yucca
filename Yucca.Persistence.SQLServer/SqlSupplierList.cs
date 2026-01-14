@@ -103,7 +103,7 @@ public class SqlSupplierList : ISupplierList
         await using var connection = GetConnection();
 
         var query = @"
-                UPDATE Suppliers SET Name = @Name, AddressLine1 = @AddressLine1, City = @City, State = @State, PostCode = @PostCode,
+                UPDATE Suppliers SET Name = @Name, AddressLine1 = @AddressLine1, AddressLine2 = @AddressLine2, City = @City, State = @State, PostCode = @PostCode,
                 CountryIsoCode = @CountryIsoCode, ContactPhone = @ContactPhone, Email = @Email, Website = @Website, TaxNumber = @TaxNumber WHERE Id = @Id";
 
         var parameters = new DynamicParameters(supplier);
