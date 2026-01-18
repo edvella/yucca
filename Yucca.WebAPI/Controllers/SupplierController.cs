@@ -24,28 +24,18 @@ namespace Yucca.WebAPI.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<Supplier>> GetSupplier(string id)
         {
-            if (string.IsNullOrEmpty(id))
-            {
-                return BadRequest("Supplier ID is required.");
-            }
+            if (string.IsNullOrEmpty(id)) return BadRequest("Supplier ID is required.");
             
-            var supplier = await _supplierList.Get(id);
+            var supplier = await _supplierList.Get(id);            
+            if (supplier == null) return NotFound();
             
-            if (supplier == null)
-            {
-                return NotFound();
-            }
-
             return Ok(supplier);
         }
 
         [HttpPost]
         public async Task<ActionResult<Supplier>> PostSupplier([FromBody] Supplier supplier)
         {
-            if (supplier == null)
-            {
-                return BadRequest("Supplier data is required.");
-            }
+            if (supplier == null) return BadRequest("Supplier data is required.");
 
             await _supplierList.Save(supplier);
             return CreatedAtAction(nameof(GetSuppliers), new { id = supplier.Id }, supplier);
@@ -54,17 +44,10 @@ namespace Yucca.WebAPI.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteSupplier(string id)
         {
-            if (string.IsNullOrEmpty(id))
-            {
-                return BadRequest("Supplier ID is required.");
-            }
-
-            var existing = await _supplierList.Get(id);
-            if (existing == null)
-            {
-                return NotFound();
-            }
-
+            if (string.IsNullOrEmpty(id)) return BadRequest("Supplier ID is required.");
+            
+            if (!await _supplierList.Exists(id)) return NotFound();
+            
             await _supplierList.Remove(id);
             return NoContent();
         }

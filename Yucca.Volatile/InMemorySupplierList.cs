@@ -44,4 +44,9 @@ public class InMemorySupplierList : ISupplierList
         var supplier = Suppliers.Find(s => s.Id == id);
         return Task.FromResult(supplier);
     }
+
+    public Task<bool> Exists(string id)
+    {
+        return Task.FromResult(Suppliers.Any(s => s.Id == id));
+    }
 }

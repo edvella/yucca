@@ -113,6 +113,15 @@ public class SqlSupplierList : ISupplierList
         return supplier.Id;
     }
 
+    public async Task<bool> Exists(string id)
+    {
+        await using var connection = GetConnection();
+        var result = await connection.QueryFirstOrDefaultAsync<int>(
+            "SELECT 1 FROM Suppliers WHERE Id = @Id",
+            new { Id = id });
+        return result != 0;
+    }
+
     private SqlConnection GetConnection()
     {
         return new SqlConnection(_configuration

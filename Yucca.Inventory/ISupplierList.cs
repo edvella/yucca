@@ -22,4 +22,6 @@ public interface ISupplierList
     Task Remove(string id);
     
     Task<Supplier> Get(string id);
+
+    Task<bool> Exists(string id);
 }
