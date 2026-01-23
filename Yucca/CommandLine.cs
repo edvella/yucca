@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace Yucca;
 
-internal static class CommandLine
+public static class CommandLine
 {
 
     public static string? Get(Dictionary<string, string> dict, string key)

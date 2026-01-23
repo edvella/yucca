@@ -24,5 +24,6 @@ public class Help : IYuccaOperation
         Console.WriteLine("  supplier remove Remove a supplier by id");
         Console.WriteLine("  supplier export --file <path>   Export suppliers as CSV to specified file path");
         Console.WriteLine("  about           Display information about the application");
+        Console.WriteLine("  migrate --path <file-path> --password <password>   Migrate suppliers from Access database to SQL Server (Windows only)");
     }
 }

@@ -104,3 +104,39 @@ In PowerShell, the same is achieved with:
 ```powershell
 yucca supplier list | Out-Printer
 ```
+
+## Data Migration
+
+The `migrate` command allows you to import supplier data from the previous version of Yucca. It will read the data using the Yucca 2 Access database (.mdb) and replicate it to the currently active Yucca 3 database.
+
+Notes: This command is only available on Windows.
+
+The migration of the Supplier table only is supported at the moment. The Country Code field is also currently not supported and will be left empty during migration as local businesses tend to not set it anyway. This feature will be added in a future release.
+
+### Migrate Suppliers from Access to SQL Server
+
+```
+yucca migrate --path <file-path> --password <database-password>
+```
+
+**Parameters:**
+- `--path` (required) - Full path to the Yucca 2 Access database file (.mdb)
+- `--password` (required) - Password for the Access database
+
+**Example:**
+```
+yucca migrate --path "D:\data\suppliers.mdb" --password "MyDatabasePassword"
+```
+
+**What the command does:**
+- Reads all supplier records from the specified Access database file
+- Validates supplier data
+- Migrates suppliers to the configured SQL Server database
+- Displays migration progress and results
+- Shows the total number of suppliers successfully migrated
+
+**Requirements:**
+- Windows platform (command is not available on Linux or macOS)
+- Valid path to an Access database file
+- Correct database password
+- SQL Server connection configured in the application

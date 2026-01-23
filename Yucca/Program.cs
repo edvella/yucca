@@ -3,8 +3,10 @@ using Microsoft.Extensions.Hosting;
 using System;
 using System.Threading.Tasks;
 using Yucca.Inventory;
+using Yucca.Migration;
 using Yucca.Operations;
 using Yucca.Operations.App;
+using Yucca.Operations.Data;
 using Yucca.Operations.Supplier;
 using Yucca.Persistence.SQLServer;
 
@@ -32,12 +34,15 @@ public class Program
 
         builder.Services.AddSingleton<ISupplierList, SqlSupplierList>();
         builder.Services.AddTransient<SupplierOps>();
+        builder.Services.AddTransient<MigrationService>();
+        builder.Services.AddTransient<AccessDataReader>();
     }
 
     private static void RegisterCommands(HostApplicationBuilder builder)
     {
         builder.Services.AddKeyedTransient<IYuccaOperation, Help>(Help.RegisterCommand());
         builder.Services.AddKeyedTransient<IYuccaOperation, About>(About.RegisterCommand());
+        builder.Services.AddKeyedTransient<IYuccaOperation, Migrate>(Migrate.RegisterCommand());
         builder.Services.AddKeyedTransient<IYuccaOperation, List>(List.RegisterCommand());
         builder.Services.AddKeyedTransient<IYuccaOperation, View>(View.RegisterCommand());
         builder.Services.AddKeyedTransient<IYuccaOperation, Add>(Add.RegisterCommand());
